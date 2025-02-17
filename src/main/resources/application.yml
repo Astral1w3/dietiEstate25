@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: dietiestates2025.postgres.database.azure.com/postgres
+    username: postgres
+    password: Ciao12345
+    driver-class-name: org.postgresql.Driver
+  jpa: 
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    show-sql: true
