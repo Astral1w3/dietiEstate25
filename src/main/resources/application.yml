@@ -1,11 +1,11 @@
 spring:
   datasource:
-    url: dietiestates2025.postgres.database.azure.com/postgres
+    url: jdbc:postgresql://dietiestates2025.postgres.database.azure.com:5432/postgres?sslmode=require
     username: postgres
     password: Ciao12345
     driver-class-name: org.postgresql.Driver
   jpa: 
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     database: postgresql
     show-sql: true
