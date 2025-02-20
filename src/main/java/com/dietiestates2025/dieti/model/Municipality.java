@@ -1,5 +1,29 @@
 package com.dietiestates2025.dieti.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Municipality {
-    
+    @Id
+    @Column(length = 5)
+    private String zipCode;
+
+    private String municipalityName;
+    @Column(length = 2)
+    private String acronym;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
 }
