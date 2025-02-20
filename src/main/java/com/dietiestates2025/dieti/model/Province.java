@@ -3,6 +3,8 @@ package com.dietiestates2025.dieti.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 public class Province {
-    
+
     @Id
     @Column(name = "acronym", length = 2, nullable = false)
     private String acronym;
@@ -25,7 +27,8 @@ public class Province {
     @Column(name = "num_municipality", nullable = false)
     private int numbersOfMunicipality;
 
-    @Column(name = "id_region", nullable = false)
-    private int idRegion;
-
+    @ManyToOne
+    @JoinColumn(name = "id_region", nullable = false)
+    private Region region;
+    
 }
