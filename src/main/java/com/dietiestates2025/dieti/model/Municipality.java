@@ -1,8 +1,6 @@
 package com.dietiestates2025.dieti.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
