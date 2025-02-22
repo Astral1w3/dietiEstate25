@@ -25,7 +25,7 @@ public class Image {
 
     @Lob
     @Column(name = "photo", columnDefinition = "BYTEA")
-    private byte[] photo;
+    private byte[] image;
 
     @ManyToOne
     @JoinColumn(name = "id_property")
