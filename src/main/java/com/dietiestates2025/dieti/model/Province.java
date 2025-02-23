@@ -34,6 +34,8 @@ public class Province {
     @JoinColumn(name = "id_region", referencedColumnName = "id_region", nullable = false)
     private Region region;
 
+
+
     @OneToMany(mappedBy = "province")
     private List<Municipality> municipalities;
 

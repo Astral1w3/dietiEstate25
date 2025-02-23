@@ -1,10 +1,15 @@
 package com.dietiestates2025.dieti.model;
 
-import jakarta.persistence.Column;
+
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +27,12 @@ public class Address {
 
     private String street;
     private Integer houseNumber;
-    
-    @Column(length = 5, nullable = false)
-    private String zipCode;
+
+    @ManyToOne
+    @JoinColumn(name = "zip_code", referencedColumnName = "zip_code", nullable = false)
+    private Municipality municipality;
+
+    @OneToMany(mappedBy = "address")
+    private List<Property> properties;
+
 }

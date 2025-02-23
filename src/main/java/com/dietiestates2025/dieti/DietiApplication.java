@@ -5,8 +5,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.dietiestates2025.dieti.repositories.MunicipalityRepository;
+import com.dietiestates2025.dieti.repositories.PropertyRepository;
+import com.dietiestates2025.dieti.repositories.SaleRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -18,13 +20,14 @@ public class DietiApplication {
     }
 
     @Bean
-	public CommandLineRunner commandLineRunner(MunicipalityRepository repo) {
+	public CommandLineRunner commandLineRunner(SaleRepository repo) {
 		return args -> {
 			// Usa la query personalizzata per caricare le regioni con le province
-			List<Object[]> results = repo.findAllProvincesOfTorino();
+			List<Object[]> results = repo.findAllPriceAndStreet();
 			for (Object[] result : results) {
-				String provinceName = (String) result[0];
-				System.out.println("Province: " + provinceName);
+				BigDecimal street = (BigDecimal) result[0];
+				String zipCode = (String) result[1];
+				System.out.println("Street: " + street + " zipcode " + zipCode);
 			}
 
 

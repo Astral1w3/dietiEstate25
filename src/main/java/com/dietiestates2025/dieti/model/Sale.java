@@ -28,6 +28,7 @@ public class Sale {
     private BigDecimal salePrice;
 
     @ManyToOne
-    @JoinColumn(name = "id_property")
+    @JoinColumn(name = "id_property", referencedColumnName = "idProperty", nullable = false)
     private Property property;
+
 }
