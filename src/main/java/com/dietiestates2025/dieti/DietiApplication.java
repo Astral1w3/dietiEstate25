@@ -5,8 +5,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.dietiestates2025.dieti.repositories.PropertyRepository;
-import com.dietiestates2025.dieti.repositories.SaleRepository;
+import com.dietiestates2025.dieti.model.Province;
+import com.dietiestates2025.dieti.model.Region;
+import com.dietiestates2025.dieti.repositories.BuyingAndSellingRepository;
+import com.dietiestates2025.dieti.repositories.RegionRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,8 +21,8 @@ public class DietiApplication {
         SpringApplication.run(DietiApplication.class, args);
     }
 
-    @Bean
-	public CommandLineRunner commandLineRunner(SaleRepository repo) {
+    /*@Bean
+	public CommandLineRunner commandLineRunner(BuyingAndSellingRepository repo) {
 		return args -> {
 			// Usa la query personalizzata per caricare le regioni con le province
 			List<Object[]> results = repo.findAllPriceAndStreet();
@@ -32,15 +34,23 @@ public class DietiApplication {
 
 
 		};
-	}
-	/*@Bean
-	public CommandLineRunner commandLineRunner(VisitBookingRepository repo) {
+	} */
+	@Bean
+	public CommandLineRunner commandLineRunner(RegionRepository repo) {
 		return args -> {
 			// Usa la query personalizzata per caricare le regioni con le province
-			List<VisitBooking> results = repo.findAll();
+			List<Region> results = repo.findAll();
 			// Print each result in the list
-			results.forEach(element -> System.out.println(element));
+			for (Region result : results) {
+				String regionName = result.getRegionName();
+				System.out.println("regionName: " + regionName);
+				/*List<Province> provinces = result.getProvinces();
+				for(Province p : provinces){
+					String provinceName = p.getProvinceName();
+					System.out.println("	ProvinceName: " + provinceName);
+				}*/
+			}
 		};
-}*/
+}
 }
 

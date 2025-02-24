@@ -1,7 +1,6 @@
 package com.dietiestates2025.dieti.model;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +34,7 @@ public class Property {
     @JoinColumn(name = "id_address", referencedColumnName = "idAddress",  nullable = false)
     private Address address;
 
-    @OneToMany(mappedBy = "property")
-    private List<Sale> sales;
+    //@OneToMany(mappedBy = "property")
+    //private List<BuyingAndSelling> BuyingAndSellings;
     
 }

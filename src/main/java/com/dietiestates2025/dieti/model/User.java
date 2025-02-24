@@ -1,5 +1,7 @@
 package com.dietiestates2025.dieti.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,5 +24,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_name")
     private Role role;
+
+    @OneToMany
+    private List<BuyingAndSelling> BuyingAndSellings;
 }
 

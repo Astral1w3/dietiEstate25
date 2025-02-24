@@ -19,14 +19,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Sale {
+public class BuyingAndSelling {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idSale;
 
     private Date saleDate;
     private BigDecimal salePrice;
+    private String idAgent;
+    private String idBuyer;
 
+    /*@ManyToOne
+    @JoinColumn(name = "id_agent", referencedColumnName = "idUser", nullable = false)
+    private User agent;
+
+    @ManyToOne
+    @JoinColumn(name = "id_buyer", referencedColumnName = "idUser", nullable = false)
+    private User buyer;
+    */
     @ManyToOne
     @JoinColumn(name = "id_property", referencedColumnName = "idProperty", nullable = false)
     private Property property;

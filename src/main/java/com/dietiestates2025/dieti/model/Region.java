@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -27,5 +28,7 @@ public class Region {
 
     @OneToMany(mappedBy = "region")
     private List<Province> provinces;
+
+    //fetch = FetchType.EAGER
     
 }
