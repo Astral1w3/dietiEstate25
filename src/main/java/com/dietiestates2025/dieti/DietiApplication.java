@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.dietiestates2025.dieti.Controller.AgentController;
+import com.dietiestates2025.dieti.Controller.RoleController;
 import com.dietiestates2025.dieti.Factory.ControllerFactory;
 import com.dietiestates2025.dieti.model.Province;
 import com.dietiestates2025.dieti.model.Region;
@@ -63,8 +64,8 @@ public class DietiApplication {
 	public CommandLineRunner commandLineRunner(RegionRepository repo) {
 		return args -> {
 			User u = new User("prova@gmai.com", "prov=ola", "provolone", null, new Role("Agent"));
-			Object agentController = controllerFactory.getController(u);
-			if(agentController instanceof AgentController){
+			RoleController controller = controllerFactory.getController(u);
+			if(controller instanceof AgentController){
 				System.out.println("yes");
 			}
 

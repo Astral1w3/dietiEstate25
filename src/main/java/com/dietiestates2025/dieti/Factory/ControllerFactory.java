@@ -1,5 +1,6 @@
 package com.dietiestates2025.dieti.Factory;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import com.dietiestates2025.dieti.Controller.ManagerController;
 import com.dietiestates2025.dieti.Controller.UnregisteredUserController;
 import com.dietiestates2025.dieti.Controller.UserController;
 import com.dietiestates2025.dieti.model.User;
+import com.dietiestates2025.dieti.Controller.RoleController;
 
 @Component
 public class ControllerFactory {
@@ -28,7 +30,7 @@ public class ControllerFactory {
         this.unregisteredUserController = unregisteredUserController;
     }
 
-    public Object getController(User user) {
+    public RoleController getController(User user) {
         switch(user.getRole()) {
             case "Admin": 
                 return adminController;
