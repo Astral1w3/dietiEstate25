@@ -25,7 +25,12 @@ public class User {
     @JoinColumn(name = "role_name")
     private Role role;
 
-    @OneToMany
-    private List<BuyingAndSelling> BuyingAndSellings;
+    //@OneToMany
+    //private List<BuyingAndSelling> BuyingAndSellings;
+
+    public String getRole(){
+        return role.getRoleName();
+    }
+
 }
 

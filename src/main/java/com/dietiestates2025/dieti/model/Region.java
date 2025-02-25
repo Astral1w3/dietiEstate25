@@ -26,9 +26,7 @@ public class Region {
     @Column(name = "region_name", nullable = false, length = 100)
     private String regionName;
 
-    @OneToMany(mappedBy = "region")
+    @OneToMany(mappedBy = "region", fetch = FetchType.EAGER)
     private List<Province> provinces;
-
-    //fetch = FetchType.EAGER
     
 }

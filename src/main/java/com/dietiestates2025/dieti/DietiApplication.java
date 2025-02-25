@@ -1,12 +1,18 @@
 package com.dietiestates2025.dieti;
 
+import org.aspectj.weaver.loadtime.Agent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.dietiestates2025.dieti.Controller.AgentController;
+import com.dietiestates2025.dieti.Factory.ControllerFactory;
 import com.dietiestates2025.dieti.model.Province;
 import com.dietiestates2025.dieti.model.Region;
+import com.dietiestates2025.dieti.model.Role;
+import com.dietiestates2025.dieti.model.User;
 import com.dietiestates2025.dieti.repositories.BuyingAndSellingRepository;
 import com.dietiestates2025.dieti.repositories.RegionRepository;
 
@@ -34,7 +40,7 @@ public class DietiApplication {
 
 
 		};
-	} */
+	} 
 	@Bean
 	public CommandLineRunner commandLineRunner(RegionRepository repo) {
 		return args -> {
@@ -44,12 +50,24 @@ public class DietiApplication {
 			for (Region result : results) {
 				String regionName = result.getRegionName();
 				System.out.println("regionName: " + regionName);
-				/*List<Province> provinces = result.getProvinces();
+				List<Province> provinces = result.getProvinces();
 				for(Province p : provinces){
 					String provinceName = p.getProvinceName();
 					System.out.println("	ProvinceName: " + provinceName);
-				}*/
+				}
 			}
+		};*/
+	@Autowired
+    private ControllerFactory controllerFactory;
+	@Bean
+	public CommandLineRunner commandLineRunner(RegionRepository repo) {
+		return args -> {
+			User u = new User("prova@gmai.com", "prov=ola", "provolone", null, new Role("Agent"));
+			Object agentController = controllerFactory.getController(u);
+			if(agentController instanceof AgentController){
+				System.out.println("yes");
+			}
+
 		};
 }
 }
