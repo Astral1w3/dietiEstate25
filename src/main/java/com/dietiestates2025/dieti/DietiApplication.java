@@ -6,9 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.dietiestates2025.dieti.Controller.AgentController;
-import com.dietiestates2025.dieti.Controller.RoleController;
-import com.dietiestates2025.dieti.Factory.ControllerFactory;
+import com.dietiestates2025.dieti.Service.UserService;
+import com.dietiestates2025.dieti.controller.AbstractRoleController;
+import com.dietiestates2025.dieti.controller.AgentController;
+import com.dietiestates2025.dieti.factory.ControllerFactory;
 import com.dietiestates2025.dieti.model.Role;
 import com.dietiestates2025.dieti.model.User;
 import com.dietiestates2025.dieti.repositories.RegionRepository;
@@ -53,14 +54,14 @@ public class DietiApplication {
 		};*/
 	@Autowired
     private ControllerFactory controllerFactory;
+	@Autowired
+	private UserService userService;
 	@Bean
 	public CommandLineRunner commandLineRunner(RegionRepository repo) {
 		return args -> {
-			User u = new User("prova@gmai.com", "prov=ola", "provolone", null, new Role("Agent"));
-			AgentController agentController = (AgentController) controllerFactory.getController(u);
-			agentController.print();
-
+			User u = userService.getUserByMail("mario@gmail.com");
+			AbstractRoleController abstractRoleController = u.getController();
+			abstractRoleController.print();
 		};
+	}
 }
-}
-

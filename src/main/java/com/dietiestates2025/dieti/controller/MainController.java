@@ -1,8 +1,8 @@
-package com.dietiestates2025.dieti.Controller;
+package com.dietiestates2025.dieti.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.dietiestates2025.dieti.Factory.ControllerFactory;
+import com.dietiestates2025.dieti.factory.ControllerFactory;
 
 public class MainController {
 
