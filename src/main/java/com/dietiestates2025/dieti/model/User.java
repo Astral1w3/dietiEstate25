@@ -1,7 +1,5 @@
 package com.dietiestates2025.dieti.model;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.*;
 

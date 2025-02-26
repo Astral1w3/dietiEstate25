@@ -1,6 +1,5 @@
 package com.dietiestates2025.dieti;
 
-import org.aspectj.weaver.loadtime.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,15 +9,9 @@ import org.springframework.context.annotation.Bean;
 import com.dietiestates2025.dieti.Controller.AgentController;
 import com.dietiestates2025.dieti.Controller.RoleController;
 import com.dietiestates2025.dieti.Factory.ControllerFactory;
-import com.dietiestates2025.dieti.model.Province;
-import com.dietiestates2025.dieti.model.Region;
 import com.dietiestates2025.dieti.model.Role;
 import com.dietiestates2025.dieti.model.User;
-import com.dietiestates2025.dieti.repositories.BuyingAndSellingRepository;
 import com.dietiestates2025.dieti.repositories.RegionRepository;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 
 @SpringBootApplication
@@ -64,10 +57,8 @@ public class DietiApplication {
 	public CommandLineRunner commandLineRunner(RegionRepository repo) {
 		return args -> {
 			User u = new User("prova@gmai.com", "prov=ola", "provolone", null, new Role("Agent"));
-			RoleController controller = controllerFactory.getController(u);
-			if(controller instanceof AgentController){
-				System.out.println("yes");
-			}
+			AgentController agentController = (AgentController) controllerFactory.getController(u);
+			agentController.print();
 
 		};
 }
