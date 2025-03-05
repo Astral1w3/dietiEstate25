@@ -2,6 +2,8 @@ package com.dietiestates2025.dieti.model;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +32,7 @@ public class Property {
     private String saleType;
     private String energyClass;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "id_address", referencedColumnName = "idAddress",  nullable = false)
     private Address address;

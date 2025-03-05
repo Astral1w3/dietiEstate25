@@ -3,6 +3,9 @@ package com.dietiestates2025.dieti.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -30,11 +33,12 @@ public class Municipality {
     private BigDecimal latitude;
     private BigDecimal longitude;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "acronym", referencedColumnName = "acronym", nullable = false)
     private Province province;
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "municipality")
     private List<Address> addresses;
 }

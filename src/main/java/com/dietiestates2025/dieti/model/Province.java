@@ -2,6 +2,9 @@ package com.dietiestates2025.dieti.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -30,12 +33,13 @@ public class Province {
     @Column(name = "num_municipality", nullable = false)
     private int numbersOfMunicipality;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_region", referencedColumnName = "id_region", nullable = false)
     private Region region;
 
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "province")
     private List<Municipality> municipalities;
 

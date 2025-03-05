@@ -2,6 +2,8 @@ package com.dietiestates2025.dieti.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -25,7 +27,8 @@ public class Region {
 
     @Column(name = "region_name", nullable = false, length = 100)
     private String regionName;
-
+    
+    @JsonManagedReference
     @OneToMany(mappedBy = "region", fetch = FetchType.EAGER)
     private List<Province> provinces;
     
