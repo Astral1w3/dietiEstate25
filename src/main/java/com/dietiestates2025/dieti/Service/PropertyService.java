@@ -23,9 +23,9 @@ public class PropertyService {
 
     }
 
-    public Property getPropertyById(int propertyId) {
-        return repo.findById(propertyId).orElse(new Property());
-    }
+    public Optional<Property> getPropertyById(int propertyId) {
+        return repo.findById(propertyId);
+    }    
 
 
     @Autowired

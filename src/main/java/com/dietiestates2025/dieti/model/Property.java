@@ -1,6 +1,7 @@
 package com.dietiestates2025.dieti.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -10,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +40,13 @@ public class Property {
     @ManyToOne(cascade = CascadeType.PERSIST) 
     @JoinColumn(name = "id_address", referencedColumnName = "idAddress",  nullable = false)
     private Address address;
+
+    @ManyToMany
+    @JoinTable(
+    name = "property_service", 
+    joinColumns = @JoinColumn(name = "id_property"), 
+    inverseJoinColumns = @JoinColumn(name = "service_name"))
+    private List<Service> services;
 
     //@OneToMany(mappedBy = "property")
     //private List<BuyingAndSelling> BuyingAndSellings;

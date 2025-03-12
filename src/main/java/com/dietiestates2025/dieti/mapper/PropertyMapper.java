@@ -32,7 +32,7 @@ public class PropertyMapper {
             if (address == null) return null;
     
             return new AddressDTO(
-                address.getIdAddress().longValue(),
+                address.getIdAddress(),
                 address.getStreet(),
             address.getHouseNumber(),
             toDTO(address.getMunicipality())  // Converte Municipality in MunicipalityDTO
@@ -86,7 +86,7 @@ public class PropertyMapper {
 
         Address address = new Address();
         if (addressDTO.getIdAddress() != null) {
-            address.setIdAddress(addressDTO.getIdAddress().intValue());
+            address.setIdAddress(addressDTO.getIdAddress());
         }
         address.setStreet(addressDTO.getStreet());
         address.setHouseNumber(addressDTO.getHouseNumber());

@@ -5,13 +5,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import java.util.List;
 
 import com.dietiestates2025.dieti.Service.UserService;
 import com.dietiestates2025.dieti.controller.AbstractRoleController;
 import com.dietiestates2025.dieti.controller.AgentController;
 import com.dietiestates2025.dieti.factory.ControllerFactory;
 import com.dietiestates2025.dieti.model.Role;
+import com.dietiestates2025.dieti.model.Service;
 import com.dietiestates2025.dieti.model.User;
+import com.dietiestates2025.dieti.repositories.PropertyRepository;
 import com.dietiestates2025.dieti.repositories.RegionRepository;
 
 
@@ -36,22 +39,20 @@ public class DietiApplication {
 
 		};
 	} 
+		*/
 	@Bean
-	public CommandLineRunner commandLineRunner(RegionRepository repo) {
+	public CommandLineRunner commandLineRunner(PropertyRepository repo) {
 		return args -> {
 			// Usa la query personalizzata per caricare le regioni con le province
-			List<Region> results = repo.findAll();
+			List<String> results = repo.findAllServiceOfProperty(1);
 			// Print each result in the list
-			for (Region result : results) {
-				String regionName = result.getRegionName();
-				System.out.println("regionName: " + regionName);
-				List<Province> provinces = result.getProvinces();
-				for(Province p : provinces){
-					String provinceName = p.getProvinceName();
-					System.out.println("	ProvinceName: " + provinceName);
-				}
+			for (String result : results) {
+				System.out.println("id: " + result);
 			}
-		};*/
+		};
+	}
+
+	/* 
 	@Autowired
     private ControllerFactory controllerFactory;
 	@Autowired
@@ -64,4 +65,6 @@ public class DietiApplication {
 			abstractRoleController.print();
 		};
 	}
+
+	*/
 }
