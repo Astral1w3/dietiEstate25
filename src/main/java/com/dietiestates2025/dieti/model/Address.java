@@ -38,5 +38,6 @@ public class Address {
     @JsonBackReference
     @OneToMany(mappedBy = "address")
     private List<Property> properties;
+    
 
 }

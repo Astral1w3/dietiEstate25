@@ -29,11 +29,11 @@ public class PropertyMapper {
     }
 
         private static AddressDTO toDTO(Address address) {
-        if (address == null) return null;
-
-        return new AddressDTO(
-            address.getIdAddress().longValue(),
-            address.getStreet(),
+            if (address == null) return null;
+    
+            return new AddressDTO(
+                address.getIdAddress().longValue(),
+                address.getStreet(),
             address.getHouseNumber(),
             toDTO(address.getMunicipality())  // Converte Municipality in MunicipalityDTO
         );
@@ -63,6 +63,67 @@ public class PropertyMapper {
         if (region == null) return null;
 
         return new RegionDTO(region.getRegionName());
+    }
+
+    public static Property toEntity(PropertyDTO propertyDTO) {
+        if (propertyDTO == null) return null;
+
+        Property property = new Property();
+        property.setIdProperty(propertyDTO.getIdProperty());
+        property.setPrice(propertyDTO.getPrice());
+        property.setDescription(propertyDTO.getDescription());
+        property.setSquareMeters(propertyDTO.getSquareMeters());
+        property.setNumberOfRooms(propertyDTO.getNumberOfRooms());
+        property.setSaleType(propertyDTO.getSaleType());
+        property.setEnergyClass(propertyDTO.getEnergyClass());
+        property.setAddress(toEntity(propertyDTO.getAddress())); // Converte AddressDTO in Address
+
+        return property;
+    }
+
+    private static Address toEntity(AddressDTO addressDTO) {
+        if (addressDTO == null) return null;
+
+        Address address = new Address();
+        if (addressDTO.getIdAddress() != null) {
+            address.setIdAddress(addressDTO.getIdAddress().intValue());
+        }
+        address.setStreet(addressDTO.getStreet());
+        address.setHouseNumber(addressDTO.getHouseNumber());
+        address.setMunicipality(toEntity(addressDTO.getMunicipality())); // Converte MunicipalityDTO in Municipality
+
+        return address;
+    }
+
+    private static Municipality toEntity(MunicipalityDTO municipalityDTO) {
+        if (municipalityDTO == null) return null;
+
+        Municipality municipality = new Municipality();
+        municipality.setMunicipalityName(municipalityDTO.getMunicipalityName());
+        municipality.setZipCode(municipalityDTO.getZipCode());
+        municipality.setProvince(toEntity(municipalityDTO.getProvince())); // Converte ProvinceDTO in Province
+
+        return municipality;
+    }
+
+    private static Province toEntity(ProvinceDTO provinceDTO) {
+        if (provinceDTO == null) return null;
+
+        Province province = new Province();
+        province.setProvinceName(provinceDTO.getProvinceName());
+        province.setAcronym(provinceDTO.getAcronym());
+        province.setRegion(toEntity(provinceDTO.getRegion())); // Converte RegionDTO in Region
+
+        return province;
+    }
+
+    private static Region toEntity(RegionDTO regionDTO) {
+        if (regionDTO == null) return null;
+
+        Region region = new Region();
+        region.setRegionName(regionDTO.getRegionName());
+
+        return region;
     }
 }
 
