@@ -25,7 +25,7 @@ public class PropertyService {
 
     public Optional<Property> getPropertyById(int propertyId) {
         return repo.findById(propertyId);
-    }    
+    }
 
 
     @Autowired
@@ -33,6 +33,7 @@ public class PropertyService {
 
     @Transactional
     public Property addProperty(Property property){ 
+        
         if (property.getAddress() != null) {
             Address address = property.getAddress();
             
@@ -62,6 +63,8 @@ public class PropertyService {
         }
         return false;
     }
+
+    
 
     
     

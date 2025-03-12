@@ -1,5 +1,7 @@
 package com.dietiestates2025.dieti.mapper;
 
+import java.util.Optional;
+
 import com.dietiestates2025.dieti.DTO.AddressDTO;
 import com.dietiestates2025.dieti.DTO.MunicipalityDTO;
 import com.dietiestates2025.dieti.DTO.PropertyDTO;
@@ -24,7 +26,8 @@ public class PropertyMapper {
             property.getNumberOfRooms(),
             property.getSaleType(),
             property.getEnergyClass(),
-            toDTO(property.getAddress())  // Converte Address in AddressDTO
+            toDTO(property.getAddress()),// Converte Address in AddressDTO
+            property.getServices() 
         );
     }
 
@@ -77,6 +80,7 @@ public class PropertyMapper {
         property.setSaleType(propertyDTO.getSaleType());
         property.setEnergyClass(propertyDTO.getEnergyClass());
         property.setAddress(toEntity(propertyDTO.getAddress())); // Converte AddressDTO in Address
+        property.setServices(propertyDTO.getServices());
 
         return property;
     }
@@ -86,7 +90,7 @@ public class PropertyMapper {
 
         Address address = new Address();
         if (addressDTO.getIdAddress() != null) {
-            address.setIdAddress(addressDTO.getIdAddress());
+            address.setIdAddress(addressDTO.getIdAddress().intValue());
         }
         address.setStreet(addressDTO.getStreet());
         address.setHouseNumber(addressDTO.getHouseNumber());
