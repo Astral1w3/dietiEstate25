@@ -3,8 +3,8 @@ package com.dietiestates2025.dieti.model;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idProperty")
 public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +38,7 @@ public class Property {
     private String saleType;
     private String energyClass;
 
-    @JsonManagedReference
+    //@JsonManagedReference
     @ManyToOne(cascade = CascadeType.PERSIST) 
     @JoinColumn(name = "id_address", referencedColumnName = "idAddress",  nullable = false)
     private Address address;
@@ -49,8 +50,4 @@ public class Property {
     joinColumns = @JoinColumn(name = "id_property"), 
     inverseJoinColumns = @JoinColumn(name = "service_name"))
     private List<Service> services;
-
-    //@OneToMany(mappedBy = "property")
-    //private List<BuyingAndSelling> BuyingAndSellings;
-    
 }

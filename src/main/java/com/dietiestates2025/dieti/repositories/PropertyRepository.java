@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.dietiestates2025.dieti.model.Property;
-import com.dietiestates2025.dieti.model.Service;
 
 public interface PropertyRepository extends JpaRepository<Property, Integer> {
 
