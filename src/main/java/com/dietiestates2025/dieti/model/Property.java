@@ -3,6 +3,7 @@ package com.dietiestates2025.dieti.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -43,7 +44,7 @@ public class Property {
     @JoinColumn(name = "id_address", referencedColumnName = "idAddress",  nullable = false)
     private Address address;
 
-    @JsonBackReference
+    //@JsonBackReference
     @ManyToMany
     @JoinTable(
     name = "property_service", 
