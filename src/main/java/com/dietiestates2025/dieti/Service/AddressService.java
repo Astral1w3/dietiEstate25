@@ -22,12 +22,8 @@ public class AddressService {
         addressRepository.save(address);
     }
 
-    public void checkIfAddressExist(Address address) {
-        Optional<Address> result = addressRepository.findByStreetAndHouseNumberAndMunicipality(
-            address.getStreet(), address.getHouseNumber(), address.getMunicipality());
-        
-        if (result.isPresent()) return;
-        else addAddressToDatabase(address);
-        
+    public Address checkIfAddressExist(Address address) {
+        return addressRepository.findByStreetAndHouseNumberAndMunicipality(
+            address.getStreet(), address.getHouseNumber(), address.getMunicipality()).orElseGet(()-> addressRepository.save(address));  
     }
 }

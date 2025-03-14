@@ -35,11 +35,9 @@ public class PropertyController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Property> addProperty(@RequestBody String json)throws JsonProcessingException {
-        System.out.println(json);
-        Property property = new ObjectMapper().readValue(json, Property.class);
+    public ResponseEntity<Property> addProperty(@RequestBody Property property) {
         Property savedProperty = propertyService.addProperty(property); 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Property());
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProperty);
     }
 
 

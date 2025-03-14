@@ -26,14 +26,8 @@ public class PropertyService {
 
     @Transactional
     public Property addProperty(Property property){ 
-        if (property.getAddress() != null) {
-            Address address = property.getAddress();
-            
-            addressService.checkIfAddressExist(address);
-
-            property.setAddress(address);
-        }
-
+        Address address = property.getAddress();
+        property.setAddress(addressService.checkIfAddressExist(address));
         return repo.save(property);
     }
 

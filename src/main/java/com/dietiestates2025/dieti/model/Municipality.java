@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -24,7 +25,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "zipCode")
 public class Municipality {
     @Id
     @Column(name = "zip_code", length = 5)
@@ -41,6 +41,7 @@ public class Municipality {
     @JoinColumn(name = "acronym", referencedColumnName = "acronym", nullable = false)
     private Province province;
 
+    @JsonIgnore
     //@JsonBackReference
     @OneToMany(mappedBy = "municipality")
     private List<Address> addresses;

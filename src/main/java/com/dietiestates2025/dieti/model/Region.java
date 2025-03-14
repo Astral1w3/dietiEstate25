@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -22,7 +23,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "regionId")
 public class Region {
 
     @Id
@@ -32,6 +32,7 @@ public class Region {
     @Column(name = "region_name", nullable = false, length = 100)
     private String regionName;
     
+    @JsonIgnore
     //@JsonBackReference
     @OneToMany(mappedBy = "region", fetch = FetchType.EAGER)
     private List<Province> provinces;
