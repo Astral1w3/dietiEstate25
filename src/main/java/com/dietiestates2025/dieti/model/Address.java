@@ -4,6 +4,9 @@ package com.dietiestates2025.dieti.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idAddress")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,12 +34,12 @@ public class Address {
     private String street;
     private Integer houseNumber;
 
-    @JsonBackReference
+    //@JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "zip_code", referencedColumnName = "zip_code", nullable = false)
     private Municipality municipality;
     
-    @JsonBackReference
+    //@JsonBackReference
     @OneToMany(mappedBy = "address")
     private List<Property> properties;
     

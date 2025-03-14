@@ -1,6 +1,5 @@
 package com.dietiestates2025.dieti.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dietiestates2025.dieti.controller.AbstractRoleController;
@@ -14,7 +13,6 @@ public class UserService {
     private final ControllerFactory controllerFactory;
     private final UserRepository userRepository;
 
-    @Autowired
     public UserService(ControllerFactory controllerFactory, UserRepository userRepository){
         this.controllerFactory = controllerFactory;
         this.userRepository = userRepository;

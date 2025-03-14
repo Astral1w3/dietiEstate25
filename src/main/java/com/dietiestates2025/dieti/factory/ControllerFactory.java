@@ -1,7 +1,5 @@
 package com.dietiestates2025.dieti.factory;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dietiestates2025.dieti.controller.AbstractRoleController;
@@ -21,7 +19,6 @@ public class ControllerFactory {
     private UserController userController;
     private UnregisteredUserController unregisteredUserController;
 
-    @Autowired
     public ControllerFactory(AgentController agentController, AdminController adminController, UserController userController, ManagerController managerController, UnregisteredUserController unregisteredUserController) {
         this.adminController = adminController;
         this.managerController = managerController;

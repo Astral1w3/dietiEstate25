@@ -3,7 +3,9 @@ package com.dietiestates2025.dieti.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "acronym")
 public class Province {
 
     @Id
@@ -33,13 +36,13 @@ public class Province {
     @Column(name = "num_municipality", nullable = false)
     private int numbersOfMunicipality;
 
-    @JsonBackReference
+    //@JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "id_region", referencedColumnName = "id_region", nullable = false)
     private Region region;
 
 
-    @JsonManagedReference
+    //@JsonBackReference
     @OneToMany(mappedBy = "province")
     private List<Municipality> municipalities;
 
