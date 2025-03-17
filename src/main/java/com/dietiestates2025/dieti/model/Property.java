@@ -38,7 +38,6 @@ public class Property {
     private String description;
     private Double squareMeters;
     private Integer numberOfRooms;
-    private String saleType;
     private String energyClass;
 
     
@@ -54,22 +53,16 @@ public class Property {
     inverseJoinColumns = @JoinColumn(name = "service_name"))
     private List<Service> services;
 
-    @Override
-    public String toString() {
-        return "Property{" +
-                "idProperty=" + idProperty +
-                ", price=" + price +
-                ", description='" + description + '\'' +
-                ", squareMeters=" + squareMeters +
-                ", numberOfRooms=" + numberOfRooms +
-                ", saleType='" + saleType + '\'' +
-                ", energyClass='" + energyClass + '\'' +
-                ", addressId=" + (address != null ? address.getIdAddress() : "null") +
-                ", services=" + (services != null ? services.stream()
-                    .map(Service::getServiceName)
-                    .collect(Collectors.toList()) : "null") +
-                '}';
-    }
+
+    @ManyToMany
+    @JoinTable(
+        name = "property_saletype",
+        joinColumns = @JoinColumn(name = "id_property"),
+        inverseJoinColumns = @JoinColumn(name = "sale_type")
+    )
+    private List<SaleType> saleTypes;
+
+    
 
 }
 

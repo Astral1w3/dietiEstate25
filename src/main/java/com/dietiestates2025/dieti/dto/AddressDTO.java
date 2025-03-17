@@ -11,4 +11,5 @@ public class AddressDTO {
     private Integer idAddress;
     private String street;
     private Integer houseNumber;
-    private MunicipalityDTO municipality;}
+    private MunicipalityDTO municipality;
+}
