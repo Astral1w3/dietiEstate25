@@ -2,9 +2,12 @@ package com.dietiestates2025.dieti.Service;
 
 import java.util.Optional;
 
+import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dietiestates2025.dieti.dto.AddressDTO;
+import com.dietiestates2025.dieti.dto.PropertyDTO;
 import com.dietiestates2025.dieti.exception.ResourceNotFoundException;
 import com.dietiestates2025.dieti.model.Address;
 import com.dietiestates2025.dieti.model.Property;
@@ -18,17 +21,22 @@ public class PropertyService {
 
     private final PropertyRepository repo;
     private final AddressService addressService;  // Iniezione di AddressService
+    DozerBeanMapper mapper;
 
-    public PropertyService(PropertyRepository repo, AddressService addressService) {
+    public PropertyService(PropertyRepository repo, AddressService addressService, DozerBeanMapper mapper) {
         this.repo = repo;
         this.addressService = addressService;
+        this.mapper = mapper;
     }
 
     @Transactional
-    public Property addProperty(Property property){ 
-        Address address = property.getAddress();
+    public PropertyDTO addProperty(PropertyDTO propertyDTO){ 
+        Address address = mapper.map(propertyDTO.getAddress(),Address.class);
+        Property property = mapper.map(propertyDTO,Property.class);
         property.setAddress(addressService.checkIfAddressExist(address));
-        return repo.save(property);
+        Property savedProperty = repo.save(property);
+        PropertyDTO savedPropertyDTO = mapper.map(savedProperty, PropertyDTO.class);
+        return savedPropertyDTO;
     }
 
     public boolean deleteProperty(int propertyId) {
@@ -39,8 +47,10 @@ public class PropertyService {
         return false;
     }
     
-    public Property getPropertyById(int propertyId) {
-        return repo.findById(propertyId)
-            .orElseThrow(() -> new ResourceNotFoundException("Property not found with id: " + propertyId));
+    public PropertyDTO getPropertyById(int propertyId) {
+        Optional<Property> optProperty = repo.findById(propertyId);
+        Property property = optProperty.get();
+        PropertyDTO propertyDTO = mapper.map(property,PropertyDTO.class);
+        return propertyDTO;
     }
 }

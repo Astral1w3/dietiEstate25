@@ -1,5 +1,7 @@
 package com.dietiestates2025.dieti.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,8 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dietiestates2025.dieti.Service.MunicipalityService;
 import com.dietiestates2025.dieti.Service.PropertyService;
 import com.dietiestates2025.dieti.Service.RegionService;
+import com.dietiestates2025.dieti.dto.MunicipalityDTO;
+import com.dietiestates2025.dieti.dto.PropertyDTO;
+import com.dietiestates2025.dieti.dto.ProvinceDTO;
+import com.dietiestates2025.dieti.dto.RegionDTO;
 import com.dietiestates2025.dieti.model.Municipality;
 import com.dietiestates2025.dieti.model.Property;
+import com.dietiestates2025.dieti.model.Province;
 import com.dietiestates2025.dieti.model.Region;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,9 +42,9 @@ public class PropertyController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Property> addProperty(@RequestBody Property property) {
-        Property savedProperty = propertyService.addProperty(property); 
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProperty);
+    public ResponseEntity<PropertyDTO> addProperty(@RequestBody PropertyDTO propertyDTO) {
+        PropertyDTO savedPropertyDTO = propertyService.addProperty(propertyDTO); 
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPropertyDTO);
     }
 
 
@@ -52,21 +59,21 @@ public class PropertyController {
     }
 
     @GetMapping("/properties/{propertyId}")
-    public ResponseEntity<Property> getPropertyById(@PathVariable int propertyId) {
-        Property p = propertyService.getPropertyById(propertyId);
-        return ResponseEntity.ok(p);
+    public ResponseEntity<PropertyDTO> getPropertyById(@PathVariable int propertyId) {
+        PropertyDTO propertyDTO = propertyService.getPropertyById(propertyId);
+        return ResponseEntity.ok(propertyDTO);
     }
 
     @GetMapping("/test/{regionId}")
-    public ResponseEntity<Region> getAddressByRegionId(@PathVariable int regionId) {
-        Region r = regionService.getRegionById(regionId);
-        return ResponseEntity.ok(r);
+    public ResponseEntity<RegionDTO> getAddressByRegionId(@PathVariable int regionId) {
+        RegionDTO regionDTO = regionService.getRegionById(regionId);
+        return ResponseEntity.ok(regionDTO);
     }
 
     @GetMapping("/test1/{zipcode}")
-    public ResponseEntity<Municipality> getAddressByRegionId(@PathVariable String zipcode) {
-        Municipality m = municipalityService.getMunicipalityById(zipcode);
-        return ResponseEntity.ok(m);
+    public ResponseEntity<MunicipalityDTO> getAddressByRegionId(@PathVariable String zipcode) {
+        MunicipalityDTO municipalityDTO = municipalityService.getMunicipalityById(zipcode);
+        return ResponseEntity.ok(municipalityDTO);
     }
     
 

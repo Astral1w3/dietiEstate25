@@ -36,16 +36,22 @@ public class Province {
     @Column(name = "num_municipality", nullable = false)
     private int numbersOfMunicipality;
 
-    //@JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "id_region", referencedColumnName = "id_region", nullable = false)
     private Region region;
 
 
-    //@JsonBackReference
     @JsonIgnore
     @OneToMany(mappedBy = "province")
     private List<Municipality> municipalities;
 
-    
+    @Override
+    public String toString() {
+        return "Province{" +
+                "acronym='" + acronym + '\'' +
+                ", provinceName='" + provinceName + '\'' +
+                ", numbersOfMunicipality=" + numbersOfMunicipality +
+                ", regionId=" + (region != null ? region.getRegionId() : "null") +
+                '}';
+    }
 }

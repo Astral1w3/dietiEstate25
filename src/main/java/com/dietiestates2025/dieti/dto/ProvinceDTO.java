@@ -1,4 +1,4 @@
-package com.dietiestates2025.dieti.DTO;
+package com.dietiestates2025.dieti.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProvinceDTO {
-    private String provinceName;
     private String acronym;
+    private String provinceName;
     private RegionDTO region;
 }

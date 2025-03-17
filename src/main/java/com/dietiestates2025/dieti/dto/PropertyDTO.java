@@ -1,13 +1,11 @@
-package com.dietiestates2025.dieti.DTO;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import com.dietiestates2025.dieti.model.Service;
+package com.dietiestates2025.dieti.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +18,6 @@ public class PropertyDTO {
     private Integer numberOfRooms;
     private String saleType;
     private String energyClass;
-    private AddressDTO address;
-    private List<Service> Services;
+    private AddressDTO address;  
+    private List<ServiceDTO> services;  
 }

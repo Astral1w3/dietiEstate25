@@ -34,15 +34,24 @@ public class Address {
     private String street;
     private Integer houseNumber;
 
-    //@JsonManagedReference
+
     @ManyToOne
     @JoinColumn(name = "zip_code", referencedColumnName = "zip_code", nullable = false)
     private Municipality municipality;
     
-    //@JsonBackReference
     @JsonIgnore
     @OneToMany(mappedBy = "address")
     private List<Property> properties;
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "idAddress=" + idAddress +
+                ", street='" + street + '\'' +
+                ", houseNumber=" + houseNumber +
+                ", municipalityZipCode='" + (municipality != null ? municipality.getZipCode() : "null") + '\'' +
+                '}';
+    }
     
 
 }

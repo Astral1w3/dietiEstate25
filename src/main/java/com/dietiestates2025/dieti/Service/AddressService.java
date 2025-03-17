@@ -26,4 +26,8 @@ public class AddressService {
         return addressRepository.findByStreetAndHouseNumberAndMunicipality(
             address.getStreet(), address.getHouseNumber(), address.getMunicipality()).orElseGet(()-> addressRepository.save(address));  
     }
+
+    public Optional<Address> findAddressbyId(Integer id){
+        return addressRepository.findById(id);
+    }
 }

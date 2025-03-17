@@ -33,8 +33,12 @@ public class Region {
     private String regionName;
     
     @JsonIgnore
-    //@JsonBackReference
-    @OneToMany(mappedBy = "region", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "region", fetch = FetchType.LAZY)
     private List<Province> provinces;
     
+    @Override
+    public String toString() {
+    return "Region{id=" + regionId + ", name='" + regionName + "'}"; // Exclude the province list
+    }
+
 }

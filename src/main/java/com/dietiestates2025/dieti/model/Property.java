@@ -2,6 +2,7 @@ package com.dietiestates2025.dieti.model;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,16 +41,35 @@ public class Property {
     private String saleType;
     private String energyClass;
 
-    //@JsonManagedReference
+    
     @ManyToOne(cascade = CascadeType.PERSIST) 
     @JoinColumn(name = "id_address", referencedColumnName = "idAddress",  nullable = false)
     private Address address;
 
-    //@JsonBackReference
+
     @ManyToMany
     @JoinTable(
     name = "property_service", 
     joinColumns = @JoinColumn(name = "id_property"), 
     inverseJoinColumns = @JoinColumn(name = "service_name"))
     private List<Service> services;
+
+    @Override
+    public String toString() {
+        return "Property{" +
+                "idProperty=" + idProperty +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", squareMeters=" + squareMeters +
+                ", numberOfRooms=" + numberOfRooms +
+                ", saleType='" + saleType + '\'' +
+                ", energyClass='" + energyClass + '\'' +
+                ", addressId=" + (address != null ? address.getIdAddress() : "null") +
+                ", services=" + (services != null ? services.stream()
+                    .map(Service::getServiceName)
+                    .collect(Collectors.toList()) : "null") +
+                '}';
+    }
+
 }
+

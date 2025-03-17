@@ -31,18 +31,25 @@ public class Municipality {
     private String zipCode;
 
     private String municipalityName;
-    @Column(length = 2, updatable=false, insertable=false)
-    private String acronym;
     private BigDecimal latitude;
     private BigDecimal longitude;
 
-    //@JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "acronym", referencedColumnName = "acronym", nullable = false)
     private Province province;
 
     @JsonIgnore
-    //@JsonBackReference
     @OneToMany(mappedBy = "municipality")
     private List<Address> addresses;
+
+    @Override
+    public String toString() {
+        return "Municipality{" +
+                "zipCode='" + zipCode + '\'' +
+                ", municipalityName='" + municipalityName + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", provinceAcronym='" + (province != null ? province.getAcronym() : "null") + '\'' +
+                '}';
+    }
 }

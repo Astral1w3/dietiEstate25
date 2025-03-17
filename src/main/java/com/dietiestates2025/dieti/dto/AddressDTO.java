@@ -1,5 +1,5 @@
-package com.dietiestates2025.dieti.DTO;
- 
+package com.dietiestates2025.dieti.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,5 @@ import lombok.NoArgsConstructor;
 public class AddressDTO {
     private Integer idAddress;
     private String street;
-    private int houseNumber;
-    private MunicipalityDTO municipality;
-    
-}
+    private Integer houseNumber;
+    private MunicipalityDTO municipality;}
