@@ -24,10 +24,14 @@ public class MunicipalityService {
         this.mapper = mapper;
     }
 
-    public MunicipalityDTO getMunicipalityById(String zipcode) {
+    public MunicipalityDTO getMunicipalityDTOById(String zipcode) {
         Optional<Municipality> municipality =  municipalityRepository.findById(zipcode);
         MunicipalityDTO municipalityDTO = mapper.map(municipality.get(),MunicipalityDTO.class);
         return municipalityDTO;
+    }
+
+    public Municipality getMunicipalityById(String zipcode) {
+        return municipalityRepository.findById(zipcode).get();
     }
     
 

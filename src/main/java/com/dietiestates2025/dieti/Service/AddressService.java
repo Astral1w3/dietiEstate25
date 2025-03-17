@@ -12,10 +12,12 @@ import com.dietiestates2025.dieti.repositories.AddressRepository;
 public class AddressService {
     
     private final AddressRepository addressRepository;
+    private final MunicipalityService municipalityService;
 
 
-    public AddressService(AddressRepository addressRepository) {
+    public AddressService(AddressRepository addressRepository, MunicipalityService municipalityService) {
         this.addressRepository = addressRepository;
+        this.municipalityService = municipalityService;
     }
 
     public void addAddressToDatabase(Address address) {
@@ -23,8 +25,10 @@ public class AddressService {
     }
 
     public Address checkIfAddressExist(Address address) {
-        return addressRepository.findByStreetAndHouseNumberAndMunicipality(
-            address.getStreet(), address.getHouseNumber(), address.getMunicipality()).orElseGet(()-> addressRepository.save(address));  
+        Address a = addressRepository.findByStreetAndHouseNumberAndMunicipality(
+            address.getStreet(), address.getHouseNumber(), address.getMunicipality()).orElseGet(()-> addressRepository.save(address)); 
+        a.setMunicipality(municipalityService.getMunicipalityById(a.getMunicipality().getZipCode()));
+        return a;
     }
 
     public Optional<Address> findAddressbyId(Integer id){

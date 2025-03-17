@@ -72,7 +72,7 @@ public class PropertyController {
 
     @GetMapping("/test1/{zipcode}")
     public ResponseEntity<MunicipalityDTO> getAddressByRegionId(@PathVariable String zipcode) {
-        MunicipalityDTO municipalityDTO = municipalityService.getMunicipalityById(zipcode);
+        MunicipalityDTO municipalityDTO = municipalityService.getMunicipalityDTOById(zipcode);
         return ResponseEntity.ok(municipalityDTO);
     }
     

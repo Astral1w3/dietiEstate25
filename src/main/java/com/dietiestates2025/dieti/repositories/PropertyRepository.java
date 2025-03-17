@@ -16,5 +16,4 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
     @Query("SELECT s.serviceName FROM Property p JOIN p.services s WHERE p.idProperty = :id")
     List<String> findAllServiceOfProperty(@Param("id") int id);
 
-
 }

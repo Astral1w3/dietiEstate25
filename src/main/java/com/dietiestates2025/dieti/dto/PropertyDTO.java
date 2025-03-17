@@ -20,4 +20,5 @@ public class PropertyDTO {
     private String energyClass;
     private AddressDTO address;  
     private List<ServiceDTO> services;  
+    private List<SaleTypeDTO> saleTypes;
 }
