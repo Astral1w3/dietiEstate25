@@ -1,5 +1,7 @@
 package com.dietiestates2025.dieti.model;
 
+import java.util.List;
+
 import com.dietiestates2025.dieti.controller.AbstractRoleController;
 
 import jakarta.persistence.*;
@@ -25,8 +27,8 @@ public class User {
     @JoinColumn(name = "role_name")
     private Role role;
 
-    //@OneToMany
-    //private List<BuyingAndSelling> BuyingAndSellings;
+    @OneToMany(mappedBy = "user")
+    private List<BuyingAndSelling> BuyingAndSelling;
 
     @Transient
     private AbstractRoleController controller;

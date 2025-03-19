@@ -28,17 +28,17 @@ public class BuyingAndSelling {
 
     private Date saleDate;
     private BigDecimal salePrice;
-    private String emailAgent;
+    //private String emailAgent;
     private String emailBuyer;
 
-    /*@ManyToOne
-    @JoinColumn(name = "id_agent", referencedColumnName = "idUser", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "email_agent", referencedColumnName = "email", nullable = false)
     private User agent;
 
-    @ManyToOne
-    @JoinColumn(name = "id_buyer", referencedColumnName = "idUser", nullable = false)
-    private User buyer;
-    */
+    // @ManyToOne
+    // @JoinColumn(name = "email_buyer", referencedColumnName = "email", nullable = false)
+    // private User buyer;
+    
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_property", referencedColumnName = "idProperty", nullable = false)
