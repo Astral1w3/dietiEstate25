@@ -2,7 +2,6 @@ package com.dietiestates2025.dieti.Service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dietiestates2025.dieti.model.Address;

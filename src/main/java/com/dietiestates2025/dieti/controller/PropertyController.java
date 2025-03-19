@@ -1,7 +1,5 @@
 package com.dietiestates2025.dieti.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,16 +14,7 @@ import com.dietiestates2025.dieti.Service.PropertyService;
 import com.dietiestates2025.dieti.Service.RegionService;
 import com.dietiestates2025.dieti.dto.MunicipalityDTO;
 import com.dietiestates2025.dieti.dto.PropertyDTO;
-import com.dietiestates2025.dieti.dto.ProvinceDTO;
 import com.dietiestates2025.dieti.dto.RegionDTO;
-import com.dietiestates2025.dieti.model.Municipality;
-import com.dietiestates2025.dieti.model.Property;
-import com.dietiestates2025.dieti.model.Province;
-import com.dietiestates2025.dieti.model.Region;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController

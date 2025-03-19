@@ -6,11 +6,8 @@ import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
 import com.dietiestates2025.dieti.dto.MunicipalityDTO;
-import com.dietiestates2025.dieti.exception.ResourceNotFoundException;
 import com.dietiestates2025.dieti.model.Municipality;
-import com.dietiestates2025.dieti.model.Region;
 import com.dietiestates2025.dieti.repositories.MunicipalityRepository;
-import com.dietiestates2025.dieti.repositories.RegionRepository;
 
 @Service
 public class MunicipalityService {

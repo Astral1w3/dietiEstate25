@@ -3,15 +3,11 @@ package com.dietiestates2025.dieti.Service;
 import java.util.Optional;
 
 import org.dozer.DozerBeanMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dietiestates2025.dieti.dto.AddressDTO;
 import com.dietiestates2025.dieti.dto.PropertyDTO;
-import com.dietiestates2025.dieti.exception.ResourceNotFoundException;
 import com.dietiestates2025.dieti.model.Address;
 import com.dietiestates2025.dieti.model.Property;
-import com.dietiestates2025.dieti.repositories.AddressRepository;
 import com.dietiestates2025.dieti.repositories.PropertyRepository;
 
 import jakarta.transaction.Transactional;
@@ -33,10 +29,11 @@ public class PropertyService {
     public PropertyDTO addProperty(PropertyDTO propertyDTO){ 
         Address address = mapper.map(propertyDTO.getAddress(),Address.class);
         Property property = mapper.map(propertyDTO,Property.class);
+
         property.setAddress(addressService.checkIfAddressExist(address));
         Property savedProperty = repo.save(property);
-        PropertyDTO savedPropertyDTO = mapper.map(savedProperty, PropertyDTO.class);
-        return savedPropertyDTO;
+
+        return mapper.map(savedProperty, PropertyDTO.class);
     }
 
     public boolean deleteProperty(int propertyId) {
