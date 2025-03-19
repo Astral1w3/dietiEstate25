@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+//da implementare non richiesto nella traccia
 public class Offer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

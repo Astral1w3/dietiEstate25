@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,9 +57,13 @@ public class Property {
     )
     private List<SaleType> saleTypes;
 
-    @OneToOne
-    @JoinColumn(referencedColumnName = "idPropertyStats")
+    @OneToOne(mappedBy = "property")
     private PropertyStats propertyStats;
+
+    @OneToMany(mappedBy = "property")
+    private List<BuyingAndSelling> buyingAndSellings;
+
+
 
 }
 

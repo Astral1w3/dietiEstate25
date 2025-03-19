@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 
@@ -22,13 +23,14 @@ public class PropertyStats {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPropertyStats;
+    private Integer idProperty;
 
     private int numberOfViews;
     private int numberOfScheduledVisits;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "propertyStats")
+    @OneToOne
+    @JoinColumn(name = "id_property", referencedColumnName = "idProperty")
     private Property property;
 
 }
