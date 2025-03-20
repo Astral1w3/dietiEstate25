@@ -1,8 +1,10 @@
 package com.dietiestates2025.dieti.Service;
 
+import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
 import com.dietiestates2025.dieti.controller.AbstractRoleController;
+import com.dietiestates2025.dieti.dto.UserDTO;
 import com.dietiestates2025.dieti.factory.ControllerFactory;
 import com.dietiestates2025.dieti.model.Agency;
 import com.dietiestates2025.dieti.model.Role;
@@ -14,10 +16,12 @@ public class UserService {
     
     private final ControllerFactory controllerFactory;
     private final UserRepository userRepository;
+    private final DozerBeanMapper dozerBeanMapper;
 
-    public UserService(ControllerFactory controllerFactory, UserRepository userRepository){
+    public UserService(ControllerFactory controllerFactory, UserRepository userRepository, DozerBeanMapper dozerBeanMapper){
         this.controllerFactory = controllerFactory;
         this.userRepository = userRepository;
+        this.dozerBeanMapper = dozerBeanMapper;
     }
 
     public void assignController(User user){
@@ -34,13 +38,15 @@ public class UserService {
         return user;
     }
 
-    public User getUserByMail(String mail){
-        User u = userRepository.findByEmail(mail);
-        assignController(u);
-        return u;
-    }
+    // public User getUserByMail(String mail){
+    //     User u = userRepository.findByEmail(mail);
+    //     assignController(u);
+    //     return u;
+    // }
 
-    //mammt
+    public UserDTO getUserByEmail(String Email){
+        return dozerBeanMapper.map(userRepository.findById(Email).get(), UserDTO.class);
+    }
     
     
 }

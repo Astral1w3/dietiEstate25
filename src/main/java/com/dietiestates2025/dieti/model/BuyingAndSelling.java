@@ -28,16 +28,14 @@ public class BuyingAndSelling {
 
     private Date saleDate;
     private BigDecimal salePrice;
-    //private String emailAgent;
-    private String emailBuyer;
 
     @ManyToOne
     @JoinColumn(name = "email_agent", referencedColumnName = "email", nullable = false)
     private User agent;
 
-    // @ManyToOne
-    // @JoinColumn(name = "email_buyer", referencedColumnName = "email", nullable = false)
-    // private User buyer;
+    @ManyToOne
+    @JoinColumn(name = "email_buyer", referencedColumnName = "email", nullable = false)
+    private User buyer;
     
     @JsonIgnore
     @ManyToOne

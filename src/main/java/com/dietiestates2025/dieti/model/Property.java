@@ -3,6 +3,9 @@ package com.dietiestates2025.dieti.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -63,7 +66,17 @@ public class Property {
     @OneToMany(mappedBy = "property")
     private List<BuyingAndSelling> buyingAndSellings;
 
+    @ManyToMany
+    @JoinTable(
+        name = "property_dashboard",
+        joinColumns = @JoinColumn(name = "id_property"),
+        inverseJoinColumns = @JoinColumn(name = "email")
+    )
+    private List<Dashboard> dashboards;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "property")
+    private List<BookedVisit> BookedVisits;
 
 }
 

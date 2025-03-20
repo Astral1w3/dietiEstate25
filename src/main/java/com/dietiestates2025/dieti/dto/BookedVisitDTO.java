@@ -1,6 +1,5 @@
 package com.dietiestates2025.dieti.dto;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BuyingAndSellingDTO {
+public class BookedVisitDTO {
 
-    private Integer idSale;
-    private Date saleDate;
-    private BigDecimal salePrice;
+    private Integer idBooking;
+    private Date visitDate;
     
 }

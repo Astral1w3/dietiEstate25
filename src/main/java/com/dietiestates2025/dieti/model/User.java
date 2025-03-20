@@ -1,5 +1,6 @@
 package com.dietiestates2025.dieti.model;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.dietiestates2025.dieti.controller.AbstractRoleController;
@@ -19,17 +20,30 @@ public class User {
     private String username;
     private String userPassword;
 
+    
     @ManyToOne
-    @JoinColumn(name = "id_agency")
+    @JoinColumn(name = "id_agency", referencedColumnName = "idAgency")
     private Agency agency;
 
     @ManyToOne
     @JoinColumn(name = "role_name")
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<BuyingAndSelling> BuyingAndSelling;
+    @OneToMany(mappedBy = "agent")
+    private List<BuyingAndSelling> sellings;
 
+    @OneToMany(mappedBy = "buyer")
+    private List<BuyingAndSelling> buyings;
+
+    @OneToOne(mappedBy = "user")
+    private Dashboard dashboard;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookedVisit> BookedVisits;
+    
+
+    // il controller è transient perchè non deve essere salvato nel database
+    // il controller settato in UserService nel momento in cui viene creato l'utente (l'assegnazione deve essere dinamica)
     @Transient
     private AbstractRoleController controller;
 
@@ -41,10 +55,23 @@ public class User {
         this.role = role;
     }
 
-
     public String getRole(){
         return role.getRoleName();
     }
 
-}
+    public List<BuyingAndSelling> getSellings() {
+        String roleName = this.role.getRoleName().toUpperCase();
+        if (roleName.equals("AGENT") || roleName.equals("ADMIN") || roleName.equals("MANAGER")) {
+            return sellings;
+        }
+        return Collections.emptyList();
+    }
+    
+    public List<BuyingAndSelling> getBuyings() {
+        if ("USER".equalsIgnoreCase(this.role.getRoleName())) {
+            return buyings;
+        }
+        return Collections.emptyList();
+    }
 
+}
