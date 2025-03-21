@@ -1,5 +1,7 @@
 package com.dietiestates2025.dieti.factory;
 
+import javax.management.relation.Role;
+
 import org.springframework.stereotype.Component;
 
 import com.dietiestates2025.dieti.controller.AbstractRoleController;
@@ -8,9 +10,7 @@ import com.dietiestates2025.dieti.controller.AgentController;
 import com.dietiestates2025.dieti.controller.ManagerController;
 import com.dietiestates2025.dieti.controller.UnregisteredUserController;
 import com.dietiestates2025.dieti.controller.UserController;
-import com.dietiestates2025.dieti.model.User;
 
-@Component
 public class ControllerFactory {
     
     private AdminController adminController;
@@ -27,8 +27,8 @@ public class ControllerFactory {
         this.unregisteredUserController = unregisteredUserController;
     }
 
-    public AbstractRoleController getController(User user) {
-        switch(user.getRole()) {
+    public AbstractRoleController getController(Role role) {
+        switch(role.getRoleName()) {
             case "Admin": 
                 return adminController;
             case "Manager": 

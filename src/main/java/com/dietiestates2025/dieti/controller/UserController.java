@@ -1,14 +1,13 @@
 package com.dietiestates2025.dieti.controller;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.dietiestates2025.dieti.Service.UserService;
-import com.dietiestates2025.dieti.dto.PropertyDTO;
 import com.dietiestates2025.dieti.dto.UserDTO;
 
-@Component
+@RestController
 public class UserController extends AbstractRoleController {
 
     UserService userService;
@@ -26,6 +25,5 @@ public class UserController extends AbstractRoleController {
         UserDTO userDTO = userService.getUserByEmail(userEmail);
         return ResponseEntity.ok(userDTO);
     }
-    
     
 }

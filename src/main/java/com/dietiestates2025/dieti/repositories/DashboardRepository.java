@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dietiestates2025.dieti.model.Dashboard;
 
-public interface DashboardRepository extends JpaRepository<Dashboard, Integer> {
+public interface DashboardRepository extends JpaRepository<Dashboard, String> {
 
 }

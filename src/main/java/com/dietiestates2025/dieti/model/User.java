@@ -39,13 +39,7 @@ public class User {
     private Dashboard dashboard;
 
     @OneToMany(mappedBy = "user")
-    private List<BookedVisit> BookedVisits;
-    
-
-    // il controller è transient perchè non deve essere salvato nel database
-    // il controller settato in UserService nel momento in cui viene creato l'utente (l'assegnazione deve essere dinamica)
-    @Transient
-    private AbstractRoleController controller;
+    private List<BookedVisit> bookedVisits;
 
     public User(String email, String username, String userPassword, Agency agency, Role role){
         this.email = email;
