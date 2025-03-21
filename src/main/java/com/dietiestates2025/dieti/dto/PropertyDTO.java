@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.dietiestates2025.dieti.model.Dashboard;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

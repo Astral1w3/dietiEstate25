@@ -2,8 +2,6 @@ package com.dietiestates2025.dieti.factory;
 
 import javax.management.relation.Role;
 
-import org.springframework.stereotype.Component;
-
 import com.dietiestates2025.dieti.controller.AbstractRoleController;
 import com.dietiestates2025.dieti.controller.AdminController;
 import com.dietiestates2025.dieti.controller.AgentController;

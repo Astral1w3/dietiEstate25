@@ -1,5 +1,7 @@
 package com.dietiestates2025.dieti.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,9 +26,10 @@ public class Image {
     private Integer idImage;
 
     @Lob
-    @Column(name = "photo", columnDefinition = "BYTEA")
+    @Column(name = "image", columnDefinition = "BYTEA")
     private byte[] image;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_property")
     private Property property;

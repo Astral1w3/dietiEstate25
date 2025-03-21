@@ -3,7 +3,6 @@ package com.dietiestates2025.dieti.model;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -77,6 +76,9 @@ public class Property {
     @JsonIgnore
     @OneToMany(mappedBy = "property")
     private List<BookedVisit> BookedVisits;
+
+    @OneToMany(mappedBy = "property")
+    private List<Image> images;
 
 }
 

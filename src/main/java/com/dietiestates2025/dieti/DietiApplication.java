@@ -15,15 +15,6 @@ import com.dietiestates2025.dieti.repositories.MunicipalityRepository;
 @SpringBootApplication
 public class DietiApplication {
 
-    private final MunicipalityRepository municipalityRepository;
-
-    private final AddressRepository addressRepository;
-
-    DietiApplication(AddressRepository addressRepository, MunicipalityRepository municipalityRepository) {
-        this.addressRepository = addressRepository;
-        this.municipalityRepository = municipalityRepository;
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(DietiApplication.class, args);
     }

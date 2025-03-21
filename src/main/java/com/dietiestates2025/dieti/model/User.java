@@ -3,8 +3,6 @@ package com.dietiestates2025.dieti.model;
 import java.util.Collections;
 import java.util.List;
 
-import com.dietiestates2025.dieti.controller.AbstractRoleController;
-
 import jakarta.persistence.*;
 import lombok.*;
 
