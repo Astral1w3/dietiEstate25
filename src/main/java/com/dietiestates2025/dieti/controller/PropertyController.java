@@ -1,5 +1,7 @@
 package com.dietiestates2025.dieti.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dietiestates2025.dieti.Service.MunicipalityService;
@@ -65,6 +68,11 @@ public class PropertyController {
         return ResponseEntity.ok(municipalityDTO);
     }
     
+    @GetMapping("/properties/search")
+    public ResponseEntity<List<PropertyDTO>> searchPropertiesByLocation(@RequestParam String location) {
+        List<PropertyDTO> properties = propertyService.findPropertiesByLocation(location);
+        return ResponseEntity.ok(properties);
+    }
 
 
 }

@@ -31,4 +31,8 @@ public class Offer {
     @ManyToOne
     @JoinColumn(name = "id_property")
     private Property property;
+
+    @ManyToOne
+    @JoinColumn(name = "state", referencedColumnName = "state", nullable = false)
+    private OfferState offerState;
 }

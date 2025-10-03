@@ -1,6 +1,7 @@
 package com.dietiestates2025.dieti.model;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,7 +30,8 @@ public class Address {
 
     private String street;
     private Integer houseNumber;
-
+    private BigDecimal latitude;
+    private BigDecimal longitude;
 
     @ManyToOne
     @JoinColumn(name = "zip_code", referencedColumnName = "zip_code", nullable = false)
@@ -44,6 +46,8 @@ public class Address {
         return "Address{" +
                 "idAddress=" + idAddress +
                 ", street='" + street + '\'' +
+                ", latitude='"+ latitude + '\'' +
+                ", longitude='"+ longitude + '\''+
                 ", houseNumber=" + houseNumber +
                 ", municipalityZipCode='" + (municipality != null ? municipality.getZipCode() : "null") + '\'' +
                 '}';
