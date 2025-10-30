@@ -17,4 +17,8 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
     List<String> findAllServiceOfProperty(@Param("id") int id);
     
     List<Property> findByAddressMunicipalityMunicipalityNameIgnoreCase(String municipalityName);
+
+        @Query("SELECT p FROM Property p JOIN p.address a JOIN a.municipality m WHERE lower(m.municipalityName) = lower(:location)")
+    List<Property> findByLocationIgnoreCase(@Param("location") String location);
+
 }

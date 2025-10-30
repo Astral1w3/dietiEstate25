@@ -25,4 +25,5 @@ public class PropertyDTO {
     //private List<BuyingAndSellingDTO> buyingAndSellings;
     private List<DashboardDTO> dashboards;
     private List<BookedVisitDTO> bookedVisits;
+    private List<String> imageUrls;
 }

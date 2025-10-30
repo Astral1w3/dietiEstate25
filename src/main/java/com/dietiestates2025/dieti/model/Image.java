@@ -1,34 +1,32 @@
 package com.dietiestates2025.dieti.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Image {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idImage;
 
-    @Column(name = "image", columnDefinition = "BYTEA")
-    private byte[] image;
+    // Salviamo solo il nome del file generato. È più sicuro e flessibile.
+    @Column(nullable = false, unique = true)
+    private String fileName;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "id_property")
+    // Relazione con la Proprietà
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idProperty", nullable = false)
+    @JsonIgnore // FONDAMENTALE per evitare cicli infiniti quando si converte in JSON
     private Property property;
+
+    // Costruttore utile
+    public Image(String fileName, Property property) {
+        this.fileName = fileName;
+        this.property = property;
+    }
 }
