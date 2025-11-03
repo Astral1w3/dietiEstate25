@@ -21,7 +21,7 @@ public class PropertyDTO {
     private AddressDTO address;  
     private List<ServiceDTO> services;  
     private List<SaleTypeDTO> saleTypes;
-    //private PropertyStatsDTO propertyStats;
+    private PropertyStatsDTO propertyStats;
     //private List<BuyingAndSellingDTO> buyingAndSellings;
     private List<DashboardDTO> dashboards;
     private List<BookedVisitDTO> bookedVisits;

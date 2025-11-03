@@ -61,7 +61,8 @@ public class Property {
     )
     private List<SaleType> saleTypes;
 
-    @OneToOne(mappedBy = "property")
+
+    @OneToOne(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private PropertyStats propertyStats;
 
     @OneToMany(mappedBy = "property")

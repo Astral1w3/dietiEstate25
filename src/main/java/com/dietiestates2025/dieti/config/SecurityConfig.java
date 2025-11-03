@@ -28,11 +28,12 @@ public class SecurityConfig {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-    @Bean
+
+     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(withDefaults())
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable()) // CSRF è già disabilitato, il che va bene per le API stateless
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
                 .requestMatchers("/api/auth/**").permitAll()
@@ -40,17 +41,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/properties/search").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/properties/{propertyId}").permitAll()
                 
-                // --- MODIFICA CHIAVE ---
-                // Dichiariamo esplicitamente che gli endpoint /user/** richiedono autenticazione.
-                // Questo rende la configurazione più chiara.
+                // --- AGGIUNGI QUESTA RIGA ---
+                // Permette a chiunque di inviare una richiesta POST per incrementare le visualizzazioni
+                .requestMatchers(HttpMethod.POST, "/api/properties/*/increment-view").permitAll()
+                
                 .requestMatchers("/api/user/**").authenticated()
-
                 .anyRequest().authenticated()
             )
-            // --- AGGIUNTA FONDAMENTALE ---
-            // 1. Diciamo a Spring di non creare sessioni (tipico per API REST con JWT)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            // 2. Aggiungiamo il nostro filtro JWT prima del filtro di autenticazione standard
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
             
         return http.build();
