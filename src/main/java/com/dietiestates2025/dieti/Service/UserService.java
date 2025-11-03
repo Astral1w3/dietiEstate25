@@ -79,12 +79,17 @@ public class UserService implements UserDetailsService {
         return dozerBeanMapper.map(savedUser, UserDTO.class);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Utente non trovato con email: " + username));
-        return new CustomUserDetails(user);
-    }
+    // File: UserService.java
+
+@Override
+public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = userRepository.findById(email)
+            .orElseThrow(() -> {
+                return new UsernameNotFoundException("Utente non trovato con email: " + email);
+            });
+
+    return new CustomUserDetails(user);
+}
     
     public UserDTO getUserByEmail(String email) {
         User user = userRepository.findById(email)

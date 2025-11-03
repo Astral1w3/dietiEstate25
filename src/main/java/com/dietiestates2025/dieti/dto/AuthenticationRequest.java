@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // Genera un costruttore senza argomenti
 @AllArgsConstructor // Genera un costruttore con tutti gli argomenti
 public class AuthenticationRequest {
-    private String username;
+    private String email;
     private String password;
 }
