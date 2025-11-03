@@ -124,11 +124,18 @@ public class UserService implements UserDetailsService {
 
     }
 
+// in UserService.java
+
     public boolean userHasPassword(String email) {
+        // Trova l'utente come prima
         User user = userRepository.findById(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utente non trovato con email: " + email));
         
-        // La password esiste se il campo non è nullo e non è una stringa vuota
-        return user.getUserPassword() != null && !user.getUserPassword().isEmpty();
+        String password = user.getUserPassword();
+
+        // --- LOGICA CORRETTA E SICURA ---
+        // Un utente ha una password se il campo non è nullo E non è una stringa vuota/spaziata.
+        // Il controllo 'password != null' previene NullPointerException per gli utenti Google.
+        return password != null && !password.isBlank();
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dietiestates2025.dieti.Service.UserService;
@@ -14,8 +15,10 @@ import com.dietiestates2025.dieti.dto.HasPasswordResponseDTO;
 import com.dietiestates2025.dieti.dto.PasswordChangeRequestDTO;
 import com.dietiestates2025.dieti.dto.UserDTO;
 
+
 @RestController
-public class UserController extends AbstractRoleController {
+@RequestMapping("/api")
+public class UserController {
 
     UserService userService;
 
@@ -27,7 +30,7 @@ public class UserController extends AbstractRoleController {
         System.out.println("UserController");
     }
 
-    @GetMapping("/user/{userEmail}")
+    @GetMapping("/user/{userEmail:.+}") 
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String userEmail){
         UserDTO userDTO = userService.getUserByEmail(userEmail);
         return ResponseEntity.ok(userDTO);
@@ -49,8 +52,9 @@ public class UserController extends AbstractRoleController {
         }
     }
 
-    @GetMapping("/user/{userEmail}/has-password")
+    @GetMapping("/user/{userEmail:.+}/has-password")
     public ResponseEntity<HasPasswordResponseDTO> checkUserPassword(@PathVariable String userEmail) {
+        System.out.println("chiamata api");
         boolean hasPassword = userService.userHasPassword(userEmail);
         return ResponseEntity.ok(new HasPasswordResponseDTO(hasPassword));
     }
