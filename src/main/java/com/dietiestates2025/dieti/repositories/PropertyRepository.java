@@ -21,4 +21,6 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
         @Query("SELECT p FROM Property p JOIN p.address a JOIN a.municipality m WHERE lower(m.municipalityName) = lower(:location)")
     List<Property> findByLocationIgnoreCase(@Param("location") String location);
 
+    
+
 }

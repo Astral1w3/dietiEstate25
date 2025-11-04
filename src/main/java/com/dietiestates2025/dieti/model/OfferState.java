@@ -22,6 +22,8 @@ public class OfferState {
      * Funge da chiave primaria (PK) perché è univoco e descrittivo.
      */
     @Id
+    private Integer id;
+    
     private String state;
 
     /**

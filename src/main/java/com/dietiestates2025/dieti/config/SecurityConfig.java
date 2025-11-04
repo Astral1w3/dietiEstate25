@@ -21,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // --- AGGIUNTA: Inietta il tuo filtro JWT ---
     private final JwtAuthenticationFilter jwtAuthFilter;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
@@ -33,19 +32,30 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(withDefaults())
-            .csrf(csrf -> csrf.disable()) // CSRF è già disabilitato, il che va bene per le API stateless
+            .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
+                // Endpoint pubblici (autenticazione, immagini, ricerca, etc.)
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/properties/search").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/properties/{propertyId}").permitAll()
-                
-                // --- AGGIUNGI QUESTA RIGA ---
-                // Permette a chiunque di inviare una richiesta POST per incrementare le visualizzazioni
                 .requestMatchers(HttpMethod.POST, "/api/properties/*/increment-view").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/visits/property/*/booked-dates").permitAll()
+
+                // Endpoint protetti che richiedono autenticazione
+                .requestMatchers(HttpMethod.POST, "/api/visits/book").authenticated()
+
+                // --- NUOVA REGOLA PER LE OFFERTE ---
+                // Richiedi l'autenticazione per tutti gli endpoint sotto /api/offers/
+                // Questo include POST per creare, GET per visualizzare, etc.
+                .requestMatchers("/api/offers/**").authenticated()
+                // --- FINE NUOVA REGOLA ---
                 
                 .requestMatchers("/api/user/**").authenticated()
+                .requestMatchers("/api/dashboard/**").authenticated()
+                
+                // Qualsiasi altra richiesta richiede l'autenticazione
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -54,12 +64,10 @@ public class SecurityConfig {
         return http.build();
     }
     
-    // 4. AGGIUNGI QUESTO BEAN PER DEFINIRE LA CONFIGURAZIONE CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); 
-        // Aggiungo PATCH per completezza, dato che lo usi
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); 
         configuration.setAllowedHeaders(Arrays.asList("*")); 
         configuration.setAllowCredentials(true); 

@@ -1,8 +1,13 @@
 package com.dietiestates2025.dieti.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.dozer.DozerBeanMapper;
@@ -10,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.dietiestates2025.dieti.dto.DashboardDTO;
 import com.dietiestates2025.dieti.dto.PropertyDTO;
 import com.dietiestates2025.dieti.model.Address;
 import com.dietiestates2025.dieti.model.Dashboard;
@@ -23,8 +29,7 @@ import com.dietiestates2025.dieti.repositories.PropertyRepository;
 import com.dietiestates2025.dieti.repositories.UserRepository;
 import com.dietiestates2025.dieti.repositories.SaleTypeRepository;
 import com.dietiestates2025.dieti.exception.*;
-
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PropertyService {
@@ -169,4 +174,71 @@ public class PropertyService {
         property.setPropertyStats(stats);
         repo.save(property);
     }
+
+    //  // --- METODO 'getDashboardDataForAgent' AGGIORNATO ---
+    // @Transactional(readOnly = true)
+    // public DashboardDTO getDashboardDataForAgent(String agentEmail) {
+    //     // 1. Cerca il dashboard dell'agente usando l'email come ID.
+    //     Optional<Dashboard> dashboardOpt = dashboardRepository.findById(agentEmail);
+
+    //     // 2. Se l'agente non ha ancora un dashboard (es. non ha ancora inserito proprietà),
+    //     //    restituisci un DTO vuoto per evitare errori nel frontend.
+    //     if (dashboardOpt.isEmpty()) {
+    //         return buildEmptyDashboardDTO();
+    //     }
+
+    //     // 3. Se il dashboard esiste, ottieni la lista delle proprietà direttamente da esso.
+    //     List<Property> properties = dashboardOpt.get().getProperties();
+
+    //     // 4. Da qui in poi, la logica è identica a prima: calcola le statistiche
+    //     //    sulla base della lista di proprietà ottenuta.
+    //     long totalViews = properties.stream()
+    //         .map(Property::getPropertyStats)
+    //         .filter(stats -> stats != null)
+    //         .mapToLong(PropertyStats::getNumberOfViews)
+    //         .sum();
+
+    //     long bookedVisits = properties.stream()
+    //         .map(Property::getPropertyStats)
+    //         .filter(stats -> stats != null)
+    //         .mapToLong(PropertyStats::getNumberOfScheduledVisits)
+    //         .sum();
+            
+    //     long offersReceived = 0; // Placeholder
+
+    //     long activeListings = properties.size();
+
+    //     Map<String, Integer> salesOverTime = new LinkedHashMap<>();
+    //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM");
+    //     for (int i = 5; i >= 0; i--) {
+    //         String month = LocalDate.now().minusMonths(i).format(formatter);
+    //         int sales = (int) (Math.random() * 5) + 1; 
+    //         salesOverTime.put(month, sales);
+    //     }
+
+    //     List<PropertyDTO> propertyDTOs = properties.stream()
+    //             .map(this::mapToDtoWithImageUrls)
+    //             .collect(Collectors.toList());
+
+    //     return DashboardDTO.builder()
+    //             .totalViews(totalViews)
+    //             .bookedVisits(bookedVisits)
+    //             .offersReceived(offersReceived)
+    //             .activeListings(activeListings)
+    //             .properties(propertyDTOs)
+    //             .salesOverTime(salesOverTime)
+    //             .build();
+    // }
+    
+    // // Helper method per creare un DTO vuoto
+    // private DashboardDTO buildEmptyDashboardDTO() {
+    //     return DashboardDTO.builder()
+    //         .totalViews(0)
+    //         .bookedVisits(0)
+    //         .offersReceived(0)
+    //         .activeListings(0)
+    //         .properties(Collections.emptyList())
+    //         .salesOverTime(new LinkedHashMap<>())
+    //         .build();
+    // }
 }

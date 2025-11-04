@@ -11,5 +11,5 @@ public class DashboardDTO {
 
     private String email;
     private int numberOfSales;
-    
+
 }
