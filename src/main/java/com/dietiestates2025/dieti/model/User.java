@@ -6,8 +6,10 @@ import java.util.List;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Entity(name = "usertable")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

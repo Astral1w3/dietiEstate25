@@ -12,14 +12,19 @@ import com.dietiestates2025.dieti.repositories.UserRepository;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.dietiestates2025.dieti.dto.BookingDetailsDTO; // <-- Importa il nuovo DTO
+import com.dietiestates2025.dieti.model.Dashboard; // <-- Importa Dashboard
+import com.dietiestates2025.dieti.repositories.DashboardRepository; // <-- Importa DashboardRepository
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class VisitService {
-
+    
+    private final DashboardRepository dashboardRepository;
     private final BookedVisitRepository bookedVisitRepository;
     private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
@@ -29,12 +34,14 @@ public class VisitService {
         BookedVisitRepository bookedVisitRepository, 
         PropertyRepository propertyRepository, 
         UserRepository userRepository,
-        DozerBeanMapper dozerBeanMapper
+        DozerBeanMapper dozerBeanMapper,
+        DashboardRepository dashboardRepository 
     ) {
         this.bookedVisitRepository = bookedVisitRepository;
         this.propertyRepository = propertyRepository;
         this.userRepository = userRepository;
         this.dozerBeanMapper = dozerBeanMapper;
+        this.dashboardRepository = dashboardRepository;
     }
 
     /**
@@ -88,5 +95,49 @@ public class VisitService {
 
         // Mappa l'entità salvata in un DTO e restituiscila
         return dozerBeanMapper.map(savedVisit, BookedVisitDTO.class);
+    }
+
+        // --- INIZIO NUOVO METODO PER LA DASHBOARD ---
+    @Transactional(readOnly = true)
+    public List<BookingDetailsDTO> getBookingsForAgent(String agentEmail) {
+        // 1. Trova il dashboard dell'agente per accedere alle sue proprietà
+        Dashboard agentDashboard = dashboardRepository.findById(agentEmail)
+            .orElseThrow(() -> new ResourceNotFoundException("Dashboard non trovato per l'agente con email: " + agentEmail));
+
+        // Se l'agente non ha proprietà, restituisci una lista vuota
+        if (agentDashboard.getProperties() == null || agentDashboard.getProperties().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // 2. Estrai gli ID di tutte le proprietà dell'agente
+        List<Integer> propertyIds = agentDashboard.getProperties().stream()
+                .map(Property::getIdProperty)
+                .collect(Collectors.toList());
+
+        // 3. Usa il nuovo metodo del repository per trovare tutte le visite per quegli ID
+        List<BookedVisit> visits = bookedVisitRepository.findByPropertyIdPropertyIn(propertyIds);
+
+        // 4. Mappa le entità BookedVisit nel DTO dettagliato
+        return visits.stream()
+                     .map(this::mapToBookingDetailsDTO)
+                     .collect(Collectors.toList());
+    }
+
+    /**
+     * Metodo helper per mappare una entità BookedVisit a un BookingDetailsDTO.
+     */
+    private BookingDetailsDTO mapToBookingDetailsDTO(BookedVisit visit) {
+        User client = visit.getUser();
+        Property property = visit.getProperty();
+        String fullAddress = property.getAddress().getStreet() + ", " + property.getAddress().getMunicipality().getMunicipalityName();
+
+        return BookingDetailsDTO.builder()
+                .id_booking(visit.getIdBooking())
+                .visit_date(visit.getVisitDate())
+                .id_property(property.getIdProperty())
+                .propertyAddress(fullAddress)
+                .email(client.getEmail())
+                .clientName(client.getUsername())
+                .build();
     }
 }

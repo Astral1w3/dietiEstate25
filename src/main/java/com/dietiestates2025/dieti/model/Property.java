@@ -21,10 +21,16 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
 
 @Entity
-@Data
+// SOSTITUISCI @Data CON QUESTO BLOCCO
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -39,19 +45,17 @@ public class Property {
     private Integer numberOfRooms;
     private String energyClass;
 
-    
     @ManyToOne(cascade = CascadeType.PERSIST) 
     @JoinColumn(name = "id_address", referencedColumnName = "idAddress",  nullable = false)
     private Address address;
 
-
     @ManyToMany
     @JoinTable(
-    name = "property_service", 
-    joinColumns = @JoinColumn(name = "id_property"), 
-    inverseJoinColumns = @JoinColumn(name = "service_name"))
+        name = "property_service", 
+        joinColumns = @JoinColumn(name = "id_property"), 
+        inverseJoinColumns = @JoinColumn(name = "service_name")
+    )
     private List<Service> services;
-
 
     @ManyToMany
     @JoinTable(
@@ -61,9 +65,13 @@ public class Property {
     )
     private List<SaleType> saleTypes;
 
-
     @OneToOne(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private PropertyStats propertyStats;
+
+    // Anche questa relazione è ora sicura perché non abbiamo più un .toString() ricorsivo
+    @ManyToOne
+    @JoinColumn(name = "id_property_state", nullable = false)
+    private PropertyState propertyState; 
 
     @OneToMany(mappedBy = "property")
     private List<BuyingAndSelling> buyingAndSellings;
@@ -82,6 +90,4 @@ public class Property {
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Image> images = new ArrayList<>();
-
 }
-

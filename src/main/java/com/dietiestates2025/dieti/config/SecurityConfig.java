@@ -27,14 +27,13 @@ public class SecurityConfig {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-
-     @Bean
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(withDefaults())
             .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
-                // Endpoint pubblici (autenticazione, immagini, ricerca, etc.)
+                // === ENDPOINT PUBBLICI (accessibili a tutti) ===
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
@@ -43,19 +42,27 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/properties/*/increment-view").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/visits/property/*/booked-dates").permitAll()
 
-                // Endpoint protetti che richiedono autenticazione
+                // === ENDPOINT PER UTENTI AUTENTICATI (qualsiasi ruolo) ===
                 .requestMatchers(HttpMethod.POST, "/api/visits/book").authenticated()
-
-                // --- NUOVA REGOLA PER LE OFFERTE ---
-                // Richiedi l'autenticazione per tutti gli endpoint sotto /api/offers/
-                // Questo include POST per creare, GET per visualizzare, etc.
                 .requestMatchers("/api/offers/**").authenticated()
-                // --- FINE NUOVA REGOLA ---
-                
                 .requestMatchers("/api/user/**").authenticated()
-                .requestMatchers("/api/dashboard/**").authenticated()
+
+                // === ENDPOINT PROTETTI PER RUOLI SPECIFICI (AGENT, MANAGER, ADMIN) ===
+                // L'agente può vedere le prenotazioni relative alle sue proprietà
+                .requestMatchers("/api/visits/agent-bookings").hasAnyRole("AGENT", "MANAGER", "ADMIN")
+
+                .requestMatchers("/api/offers/agent-offers").hasAnyRole("AGENT", "MANAGER", "ADMIN")
+                // La dashboard è accessibile solo a questi ruoli
+                .requestMatchers("/api/dashboard/**").hasAnyRole("AGENT", "MANAGER", "ADMIN")
+
+                // Creazione/modifica di proprietà (esempio di regola aggiuntiva)
+                .requestMatchers(HttpMethod.POST, "/api/properties").hasAnyRole("AGENT", "MANAGER", "ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/properties/**").hasAnyRole("AGENT", "MANAGER", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/properties/**").hasAnyRole("AGENT", "MANAGER", "ADMIN")
                 
-                // Qualsiasi altra richiesta richiede l'autenticazione
+                // === REGOLA FINALE ===
+                // Qualsiasi altra richiesta che non è stata ancora definita richiede l'autenticazione.
+                // Questa è una buona misura di sicurezza "catch-all".
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -66,6 +73,7 @@ public class SecurityConfig {
     
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        // ... (la tua configurazione CORS rimane invariata)
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); 
@@ -77,5 +85,4 @@ public class SecurityConfig {
         
         return source;
     }
-
 }

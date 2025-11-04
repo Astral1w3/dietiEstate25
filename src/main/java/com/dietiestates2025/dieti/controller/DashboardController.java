@@ -1,28 +1,34 @@
-// package com.dietiestates2025.dieti.controller;
+package com.dietiestates2025.dieti.controller;
 
-// import com.dietiestates2025.dieti.Service.PropertyService;
-// import com.dietiestates2025.dieti.dto.DashboardDTO;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.security.core.Authentication;
-// import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.bind.annotation.RequestMapping;
-// import org.springframework.web.bind.annotation.RestController;
+import com.dietiestates2025.dieti.Service.DashboardService;
+import com.dietiestates2025.dieti.dto.DashboardDTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-// @RestController
-// @RequestMapping("/api/dashboard")
-// public class DashboardController {
+@RestController
+@RequestMapping("/api/dashboard")
+public class DashboardController {
 
-//     private final PropertyService propertyService;
+    private final DashboardService dashboardService;
 
-//     public DashboardController(PropertyService propertyService) {
-//         this.propertyService = propertyService;
-//     }
+    public DashboardController(DashboardService dashboardService) {
+        this.dashboardService = dashboardService;
+    }
 
-//     @GetMapping("/agent")
-//     public ResponseEntity<DashboardDTO> getAgentDashboard(Authentication authentication) {
-//         // L'email dell'utente autenticato viene usata per recuperare i dati corretti
-//         String userEmail = authentication.getName(); 
-//         DashboardDTO dashboardData = propertyService.getDashboardDataForAgent(userEmail);
-//         return ResponseEntity.ok(dashboardData);
-//     }
-// }
+    /**
+     * Endpoint protetto per recuperare tutti i dati aggregati per la dashboard
+     * dell'agente autenticato.
+     * 
+     * @param authentication Oggetto fornito da Spring Security con i dettagli dell'utente.
+     * @return Un DTO completo con tutte le statistiche della dashboard.
+     */
+    @GetMapping("/agent")
+    public ResponseEntity<DashboardDTO> getAgentDashboard(Authentication authentication) {
+        String agentEmail = authentication.getName();
+        DashboardDTO dashboardData = dashboardService.getDashboardDataForAgent(agentEmail);
+        return ResponseEntity.ok(dashboardData);
+    }
+}

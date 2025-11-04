@@ -94,8 +94,8 @@ public class PropertyController {
     }
     
     @GetMapping("/properties/search")
-    public ResponseEntity<List<PropertyDTO>> searchPropertiesByLocation(@RequestParam String location) {
-        List<PropertyDTO> properties = propertyService.findPropertiesByLocation(location);
+    public ResponseEntity<List<PropertyDTO>> findPropertiesByLocationAvailable(@RequestParam String location) {
+        List<PropertyDTO> properties = propertyService.findPropertiesByLocationAvailable(location);
         return ResponseEntity.ok(properties);
     }
 

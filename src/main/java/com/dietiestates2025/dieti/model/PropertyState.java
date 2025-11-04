@@ -1,33 +1,34 @@
 package com.dietiestates2025.dieti.model;
 
+// Assicurati di avere questi import
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Table(name = "property_state")
+// SOSTITUISCI @Data CON QUESTO BLOCCO
 @Getter
 @Setter
-public class Agency {
+@NoArgsConstructor
+@AllArgsConstructor
+public class PropertyState {
+
     @Id
-    private Integer idAgency;
+    private Integer id;
 
-    private String agencyName;
-
+    private String state;
+    
     @JsonIgnore
-    @OneToMany(mappedBy = "agency")
-    private List<User> users;
+    @OneToMany(mappedBy = "propertyState")
+    private List<Property> properties;
 }

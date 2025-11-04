@@ -30,6 +30,8 @@ import com.dietiestates2025.dieti.repositories.UserRepository;
 import com.dietiestates2025.dieti.repositories.SaleTypeRepository;
 import com.dietiestates2025.dieti.exception.*;
 import org.springframework.transaction.annotation.Transactional;
+import com.dietiestates2025.dieti.model.PropertyState;
+import com.dietiestates2025.dieti.repositories.PropertyStateRepository;
 
 @Service
 public class PropertyService {
@@ -41,6 +43,9 @@ public class PropertyService {
     private final UserRepository userRepository; 
     private final DashboardRepository dashboardRepository;
     private final SaleTypeRepository saleTypeRepository; // <-- Dipendenza per SaleType
+    private final PropertyStateRepository propertyStateRepository; // <-- NUOVA DIPENDENZA
+
+    private static final Integer DEFAULT_PROPERTY_STATE_ID = 1;
 
     // --- COSTRUTTORE (già corretto) ---
     public PropertyService(
@@ -50,7 +55,8 @@ public class PropertyService {
         DozerBeanMapper dozerBeanMapper,
         FileStorageService fileStorageService,
         UserRepository userRepository,
-        DashboardRepository dashboardRepository
+        DashboardRepository dashboardRepository,
+        PropertyStateRepository propertyStateRepository
     ) {
         this.saleTypeRepository = saleTypeRepository;
         this.repo = repo;
@@ -59,6 +65,7 @@ public class PropertyService {
         this.fileStorageService = fileStorageService;
         this.userRepository = userRepository;
         this.dashboardRepository = dashboardRepository;
+        this.propertyStateRepository = propertyStateRepository;
     }
 
     @Transactional
@@ -89,10 +96,20 @@ public class PropertyService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                     "SaleType '" + saleTypeName + "' not found. Make sure it exists in the database."
                 ));
-        
+
         List<SaleType> saleTypes = new ArrayList<>();
         saleTypes.add(saleType);
         property.setSaleTypes(saleTypes);
+
+        // --- INIZIO NUOVA LOGICA PER PROPERTY STATE ---
+        // Quando una nuova proprietà viene creata, il suo stato di default è "Available".
+        PropertyState defaultState = propertyStateRepository.findById(DEFAULT_PROPERTY_STATE_ID)
+            .orElseThrow(() -> new IllegalStateException(
+                "Stato di default 'Available' non trovato. Assicurati che esista con ID " + DEFAULT_PROPERTY_STATE_ID
+            ));
+        
+        property.setPropertyState(defaultState);
+        // --- FINE NUOVA LOGICA ---
         
         List<Dashboard> dashboards = new ArrayList<>();
         dashboards.add(userDashboard);
@@ -136,6 +153,15 @@ public class PropertyService {
                          .collect(Collectors.toList());
     }
 
+    private static final Integer AVAILABLE_STATE_ID = 1;
+    public List<PropertyDTO> findPropertiesByLocationAvailable(String location) {
+        List<Property> properties = repo.findByLocationAndState(location, AVAILABLE_STATE_ID);
+        
+        return properties.stream()
+                         .map(this::mapToDtoWithImageUrls)
+                         .collect(Collectors.toList());
+    }
+
     private PropertyDTO mapToDtoWithImageUrls(Property property) {
         PropertyDTO dto = dozerBeanMapper.map(property, PropertyDTO.class);
         
@@ -144,6 +170,12 @@ public class PropertyService {
         if (property.getSaleTypes() != null && !property.getSaleTypes().isEmpty()) {
             dto.setSaleType(property.getSaleTypes().get(0).getSaleType());
         }
+
+        // --- NUOVA LOGICA DI MAPPING PER LO STATO ---
+        if (property.getPropertyState() != null) {
+            dto.setPropertyState(property.getPropertyState().getState());
+        }
+        // --- FINE NUOVA LOGICA ---
 
         List<String> imageUrls = property.getImages().stream()
             .map(image -> ServletUriComponentsBuilder.fromCurrentContextPath()

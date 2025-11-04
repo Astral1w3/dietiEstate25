@@ -21,6 +21,19 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
         @Query("SELECT p FROM Property p JOIN p.address a JOIN a.municipality m WHERE lower(m.municipalityName) = lower(:location)")
     List<Property> findByLocationIgnoreCase(@Param("location") String location);
 
-    
-
+    @Query("SELECT p FROM Property p " +
+           "JOIN p.address a " +
+           "JOIN a.municipality m " +
+           "JOIN m.province prov " +
+           "WHERE p.propertyState.id = :stateId " +
+           "AND (" +
+           "   LOWER(a.street) LIKE LOWER(CONCAT('%', :location, '%')) OR " +
+           "   LOWER(m.municipalityName) LIKE LOWER(CONCAT('%', :location, '%')) OR " +
+           "   LOWER(prov.provinceName) LIKE LOWER(CONCAT('%', :location, '%')) OR " +
+           "   LOWER(prov.acronym) LIKE LOWER(CONCAT('%', :location, '%'))" +
+           ")")
+    List<Property> findByLocationAndState(
+        @Param("location") String location, 
+        @Param("stateId") Integer stateId
+    );
 }
