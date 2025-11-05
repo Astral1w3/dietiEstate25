@@ -34,20 +34,6 @@ public class PropertyController {
         this.objectMapper = objectMapper;
     }
 
-    // --- INIZIO MODIFICA: Risoluzione del conflitto di routing ---
-    
-    // Questo metodo verrà ora chiamato solo per URL che terminano in /search
-    // E che contengono obbligatoriamente il parametro "location".
-    // @GetMapping(path = "/search", params = "location") 
-    // public ResponseEntity<Page<PropertyDTO>> findPropertiesByLocationAvailable(
-    //     @RequestParam String location,
-    //     Pageable pageable
-    // ) {
-    //     Page<PropertyDTO> propertiesPage = propertyService.findPropertiesByLocationAvailable(location, pageable);
-    //     return ResponseEntity.ok(propertiesPage);
-    // }
-
-
     @GetMapping(path = "/search", params = "location") 
     public ResponseEntity<PagedResponseDTO<PropertyDTO>> findPropertiesByLocationAvailable(
         @RequestParam String location,
@@ -87,7 +73,6 @@ public class PropertyController {
         try {
             PropertyDTO propertyDTO = objectMapper.readValue(propertyDataJson, PropertyDTO.class);
             String userEmail = authentication.getName();
-            System.out.println(propertyDTO);
             PropertyDTO savedPropertyDTO = propertyService.addPropertyAndImages(propertyDTO, images, userEmail); 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedPropertyDTO);
         } catch (IOException e) {

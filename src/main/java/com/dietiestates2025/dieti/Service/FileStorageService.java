@@ -1,5 +1,7 @@
 package com.dietiestates2025.dieti.Service;
 
+import com.dietiestates2025.dieti.exception.FileStorageException;
+import com.dietiestates2025.dieti.exception.ResourceNotFoundException; // <-- USA LA TUA ECCEZIONE
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -12,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Objects; // <-- IMPORT NECESSARIO
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -26,47 +28,37 @@ public class FileStorageService {
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
-            throw new RuntimeException("Non è stato possibile creare la cartella dove salvare i file.", ex);
+            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
 
     public String storeFile(MultipartFile file) {
-        // --- INIZIO BLOCCO CORRETTO ---
-        
-        // 1. Estrai il nome del file originale
         String originalFileName = file.getOriginalFilename();
 
-        // 2. Controlla che il nome non sia nullo o vuoto prima di usarlo.
         if (originalFileName == null || originalFileName.trim().isEmpty()) {
-            throw new RuntimeException("Impossibile salvare il file: il nome del file non è valido.");
+            throw new FileStorageException("Cannot store file: file name is invalid.");
         }
 
-        // 3. Ora che sappiamo che non è nullo, possiamo pulirlo in sicurezza.
         String cleanFileName = StringUtils.cleanPath(Objects.requireNonNull(originalFileName));
         
-        // --- FINE BLOCCO CORRETTO ---
-
         try {
-            // Controlli di sicurezza base sul nome del file pulito
             if (cleanFileName.contains("..")) {
-                throw new RuntimeException("Il nome del file contiene una sequenza non valida: " + cleanFileName);
+                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + cleanFileName);
             }
 
-            // Crea un nome di file univoco
             String fileExtension = "";
             int dotIndex = cleanFileName.lastIndexOf('.');
-            if (dotIndex >= 0) { // Usare >= 0 per gestire file come ".env"
+            if (dotIndex >= 0) {
                 fileExtension = cleanFileName.substring(dotIndex);
             }
             String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
 
-            // Costruisce il percorso completo e salva il file
             Path targetLocation = this.fileStorageLocation.resolve(uniqueFileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             return uniqueFileName;
         } catch (IOException ex) {
-            throw new RuntimeException("Impossibile salvare il file " + cleanFileName, ex);
+            throw new FileStorageException("Could not store file " + cleanFileName + ". Please try again!", ex);
         }
     }
 
@@ -74,13 +66,16 @@ public class FileStorageService {
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
+            
+            if (resource.exists() && resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("File non trovato: " + fileName);
+                // --- MODIFICA CHIAVE: Usa la tua eccezione esistente ---
+                throw new ResourceNotFoundException("File not found: " + fileName);
             }
         } catch (MalformedURLException ex) {
-            throw new RuntimeException("File non trovato: " + fileName, ex);
+            // --- MODIFICA CHIAVE: Usa la tua eccezione esistente ---
+            throw new ResourceNotFoundException("File not found: " + fileName, ex);
         }
     }
 }

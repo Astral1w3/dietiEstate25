@@ -31,7 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(withDefaults())
-            .csrf(csrf -> csrf.disable()) 
+            .csrf(csrf -> csrf.disable()) //NOSONAR: App is stateless, authentication is done via JWT in header
             .authorizeHttpRequests(auth -> auth
                 // === ENDPOINT PUBBLICI (accessibili a tutti) ===
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 

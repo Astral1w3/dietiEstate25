@@ -22,41 +22,6 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
         @Query("SELECT p FROM Property p JOIN p.address a JOIN a.municipality m WHERE lower(m.municipalityName) = lower(:location)")
     List<Property> findByLocationIgnoreCase(@Param("location") String location);
 
-    // // --- QUERY DI RICERCA PRINCIPALE OTTIMIZZATA E CON PAGINAZIONE ---
-    // @Query(value = "SELECT DISTINCT p FROM Property p " +
-    //         // --- Fetch di tutte le relazioni usate nel mapping ---
-    //         "LEFT JOIN FETCH p.address a " +
-    //         "LEFT JOIN FETCH a.municipality m " + // Carichiamo anche Municipality
-    //         "LEFT JOIN FETCH m.province prov " +   // e Province
-    //         "LEFT JOIN FETCH prov.region r " +     // e Region
-    //         "LEFT JOIN FETCH p.propertyState ps " +
-    //         "LEFT JOIN FETCH p.images i " +
-    //         "LEFT JOIN FETCH p.saleTypes st " +
-    //         "LEFT JOIN FETCH p.services s " +
-    //         "LEFT JOIN FETCH p.propertyStats p_stats " +
-    //         "WHERE p.propertyState.id = :stateId " +
-    //         "AND (" +
-    //         "   LOWER(a.street) LIKE CONCAT('%', :location, '%') OR " +
-    //         "   LOWER(m.municipalityName) LIKE CONCAT('%', :location, '%') OR " +
-    //         "   LOWER(prov.provinceName) LIKE CONCAT('%', :location, '%') OR " +
-    //         "   LOWER(prov.acronym) LIKE CONCAT('%', :location, '%')" +
-    //         ")",
-    //         countQuery = "SELECT COUNT(DISTINCT p.id) FROM Property p " +
-    //                      "JOIN p.address a " +
-    //                      "JOIN a.municipality m " +
-    //                      "JOIN m.province prov " +
-    //                      "WHERE p.propertyState.id = :stateId AND (" +
-    //                      "LOWER(a.street) LIKE CONCAT('%', :location, '%') OR " +
-    //                      "LOWER(m.municipalityName) LIKE CONCAT('%', :location, '%') OR " +
-    //                      "LOWER(prov.provinceName) LIKE CONCAT('%', :location, '%') OR " +
-    //                      "LOWER(prov.acronym) LIKE CONCAT('%', :location, '%'))")
-    // Page<Property> findByLocationAndStateWithDetails(
-    //         @Param("location") String location,
-    //         @Param("stateId") Integer stateId,
-    //         Pageable pageable
-    // );
-
-
     // Query 1: Trova solo gli ID della pagina. È veloce e paginabile.
     @Query(value = "SELECT p.idProperty FROM Property p " + // Seleziona solo p.idProperty
                    "JOIN p.address a " +

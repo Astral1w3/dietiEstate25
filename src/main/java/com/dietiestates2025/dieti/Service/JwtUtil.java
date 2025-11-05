@@ -8,6 +8,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import org.springframework.beans.factory.annotation.Value; // <-- IMPORT NECESSARIO
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,11 +20,16 @@ import javax.crypto.SecretKey;
 @Service
 public class JwtUtil {
 
-    private String SECRET_KEY = "yourGeneratedBase64Key-oJb8V8Yzuw8bFpQ8g7F2aK3eP1cV6sD0lB7jN9hT5yE=";
+    
+    private final SecretKey signingKey;
+
+    public JwtUtil(@Value("${application.security.jwt.secret-key}") String secretKey) {
+        byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
+        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return this.signingKey;
     }
 
     public String extractUsername(String token) {

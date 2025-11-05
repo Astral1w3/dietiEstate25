@@ -64,7 +64,6 @@ public class PropertyService {
 
     @Transactional
     public PropertyDTO addPropertyAndImages(PropertyDTO propertyDTO, List<MultipartFile> imageFiles, String userEmail){ 
-        // ... (questo metodo rimane invariato)
         User owner = userRepository.findById(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + userEmail));
 
@@ -117,7 +116,6 @@ public class PropertyService {
     }
     
     public boolean deleteProperty(int propertyId) {
-        // ... (questo metodo rimane invariato)
         if(repo.existsById(propertyId)){
             repo.deleteById(propertyId);
             return true;
@@ -126,52 +124,19 @@ public class PropertyService {
     }
 
     public PropertyDTO getPropertyById(int propertyId) {
-        // ... (questo metodo rimane invariato)
         Property property = repo.findById(propertyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Property not found with id: " + propertyId));
         return mapToDtoWithImageUrls(property);
     }
     
-    // Lasciamo questo metodo per compatibilità, se usato altrove
     public List<PropertyDTO> findPropertiesByLocation(String location) {
-        // ... (questo metodo rimane invariato)
-        // NOTA: Questa chiamata non è ottimizzata né paginata.
-        // List<Property> properties = repo.findByLocationIgnoreCase(location);
-        // return properties.stream()
-        //                  .map(this::mapToDtoWithImageUrls)
-        //                  .collect(Collectors.toList());
-        return Collections.emptyList(); // Temporaneamente disabilitato per evitare confusione
+        return Collections.emptyList();
     }
 
     private static final Integer AVAILABLE_STATE_ID = 1;
 
-//     // --- INIZIO BLOCCO MODIFICATO ---
-//  public Page<PropertyDTO> findPropertiesByLocationAvailable(String location, Pageable pageable) {
-//         String lowerCaseLocation = location.toLowerCase();
-    
-//         // 1. Esegui la prima query per ottenere solo gli ID della pagina corrente.
-//         Page<Integer> idsPage = repo.findIdsByLocationAndState(lowerCaseLocation, AVAILABLE_STATE_ID, pageable);
-    
-//         // Se la pagina non ha contenuto, restituisci subito una pagina vuota.
-//         if (!idsPage.hasContent()) {
-//             return Page.empty(pageable);
-//         }
-    
-//         // 2. Esegui la seconda query per caricare i dettagli completi SOLO per gli ID trovati.
-//         List<Property> properties = repo.findFullPropertiesByIds(idsPage.getContent());
-    
-//         // 3. Mappa i risultati in DTO.
-//         List<PropertyDTO> dtos = properties.stream()
-//                              .map(this::mapToDtoWithImageUrls)
-//                              .collect(Collectors.toList());
-    
-//         // 4. Ricostruisci l'oggetto Page<PropertyDTO> finale.
-//         return new PageImpl<>(dtos, pageable, idsPage.getTotalElements());
-//     }
-//     // --- FINE BLOCCO MODIFICATO ---
 
     private PropertyDTO mapToDtoWithImageUrls(Property property) {
-        // ... (questo metodo rimane invariato)
         PropertyDTO dto = dozerBeanMapper.map(property, PropertyDTO.class);
         
         Set<SaleType> saleTypes = property.getSaleTypes();
@@ -196,7 +161,6 @@ public class PropertyService {
     
     @Transactional
     public void incrementViewCount(Integer propertyId) {
-        // ... (questo metodo rimane invariato)
         Property property = repo.findById(propertyId)
             .orElseThrow(() -> new ResourceNotFoundException("Property not found with id: " + propertyId));
         
@@ -220,7 +184,7 @@ public class PropertyService {
     
         List<PropertyDTO> dtos;
         if (!idsPage.hasContent()) {
-            dtos = Collections.emptyList(); // Lista vuota se non ci sono ID
+            dtos = Collections.emptyList();
         } else {
             List<Property> properties = repo.findFullPropertiesByIds(idsPage.getContent());
             dtos = properties.stream()
@@ -228,7 +192,6 @@ public class PropertyService {
                          .collect(Collectors.toList());
         }
     
-        // --- COSTRUISCI E RESTITUISCI IL NUOVO DTO ---
         return new PagedResponseDTO<>(
             dtos,
             idsPage.getNumber(),

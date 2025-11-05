@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,7 +61,6 @@ public class DashboardService {
         long totalOffersReceived = offerRepository.countByPropertyIds(propertyIds);
         
         long activeListings = properties.size();
-        Map<String, Long> salesOverTime = generateMockSalesData();
 
         List<PropertyDashboardDTO> propertyDTOs = properties.stream()
                 .map(this::mapToPropertyDashboardDTO) // Ora questa riga è di nuovo valida
@@ -74,7 +71,6 @@ public class DashboardService {
                 .bookedVisits(totalBookedVisits)
                 .offersReceived(totalOffersReceived)
                 .activeListings(activeListings)
-                .salesOverTime(salesOverTime)
                 .properties(propertyDTOs)
                 .build();
     }
@@ -131,15 +127,4 @@ public class DashboardService {
             .build();
     }
 
-    /** Helper per generare dati simulati per il grafico. */
-    private Map<String, Long> generateMockSalesData() {
-        Map<String, Long> salesOverTime = new LinkedHashMap<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM", Locale.ITALIAN);
-        for (int i = 5; i >= 0; i--) {
-            String month = LocalDate.now().minusMonths(i).format(formatter);
-            long sales = (long) (Math.random() * 5); // Valori casuali
-            salesOverTime.put(month, sales);
-        }
-        return salesOverTime;
-    }
 }
