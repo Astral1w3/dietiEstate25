@@ -7,7 +7,6 @@ import com.dietiestates2025.dieti.model.User;
 import com.dietiestates2025.dieti.repositories.RoleRepository;
 import com.dietiestates2025.dieti.repositories.UserRepository;
 import org.dozer.DozerBeanMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional; // Corretto import per @Transactional
@@ -23,7 +22,6 @@ public class AgentService extends UserService {
     private final PasswordEncoder passwordEncoder;
     private final DozerBeanMapper dozerBeanMapper;
 
-    @Autowired // <-- ANNOTAZIONE OPZIONALE MA CONSIGLIATA: Rende esplicita l'iniezione
     public AgentService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, DozerBeanMapper dozerBeanMapper) {
         // Chiama il costruttore della classe padre (UserService) per inizializzare le sue dipendenze
         super(userRepository, roleRepository, passwordEncoder, dozerBeanMapper);

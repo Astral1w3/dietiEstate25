@@ -3,6 +3,8 @@ package com.dietiestates2025.dieti.repositories;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.dietiestates2025.dieti.model.Offer;
 
@@ -23,4 +25,9 @@ public interface OfferRepository extends JpaRepository<Offer, Integer> {
      * @return Il numero di offerte.
      */
     long countByPropertyIdProperty(Integer propertyId);
+
+
+    @Query("SELECT COUNT(o) FROM Offer o WHERE o.property.idProperty IN :propertyIds")
+    long countByPropertyIds(@Param("propertyIds") List<Integer> propertyIds);
+    
 }

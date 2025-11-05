@@ -7,24 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.MalformedURLException; 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects; // <-- IMPORT NECESSARIO
 import java.util.UUID;
 
-@Service // <-- ANNOTAZIONE FONDAMENTALE: Dice a Spring di gestire questa classe
+@Service
 public class FileStorageService {
 
     private final Path fileStorageLocation;
 
-    // Il costruttore legge il percorso dal file application.yml
-    // ***** QUESTA È LA RIGA CORRETTA *****
     public FileStorageService(@Value("${spring.servlet.multipart.location}") String uploadDir) {
         this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
 
-        // Crea la cartella di upload se non esiste
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
@@ -32,25 +30,33 @@ public class FileStorageService {
         }
     }
 
-    /**
-     * Salva un file su disco.
-     * @param file il file ricevuto dalla richiesta HTTP
-     * @return il nome univoco generato per il file salvato
-     */
     public String storeFile(MultipartFile file) {
-        String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+        // --- INIZIO BLOCCO CORRETTO ---
+        
+        // 1. Estrai il nome del file originale
+        String originalFileName = file.getOriginalFilename();
+
+        // 2. Controlla che il nome non sia nullo o vuoto prima di usarlo.
+        if (originalFileName == null || originalFileName.trim().isEmpty()) {
+            throw new RuntimeException("Impossibile salvare il file: il nome del file non è valido.");
+        }
+
+        // 3. Ora che sappiamo che non è nullo, possiamo pulirlo in sicurezza.
+        String cleanFileName = StringUtils.cleanPath(Objects.requireNonNull(originalFileName));
+        
+        // --- FINE BLOCCO CORRETTO ---
 
         try {
-            // Controlli di sicurezza base sul nome del file
-            if (originalFileName.contains("..")) {
-                throw new RuntimeException("Il nome del file contiene una sequenza non valida: " + originalFileName);
+            // Controlli di sicurezza base sul nome del file pulito
+            if (cleanFileName.contains("..")) {
+                throw new RuntimeException("Il nome del file contiene una sequenza non valida: " + cleanFileName);
             }
 
-            // Crea un nome di file univoco per evitare che due file con lo stesso nome si sovrascrivano
+            // Crea un nome di file univoco
             String fileExtension = "";
-            int dotIndex = originalFileName.lastIndexOf('.');
-            if (dotIndex > 0) {
-                fileExtension = originalFileName.substring(dotIndex);
+            int dotIndex = cleanFileName.lastIndexOf('.');
+            if (dotIndex >= 0) { // Usare >= 0 per gestire file come ".env"
+                fileExtension = cleanFileName.substring(dotIndex);
             }
             String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
 
@@ -60,15 +66,10 @@ public class FileStorageService {
 
             return uniqueFileName;
         } catch (IOException ex) {
-            throw new RuntimeException("Impossibile salvare il file " + originalFileName, ex);
+            throw new RuntimeException("Impossibile salvare il file " + cleanFileName, ex);
         }
     }
 
-    /**
-     * Carica un file dal disco come risorsa.
-     * @param fileName il nome del file da caricare
-     * @return la risorsa da inviare nella risposta HTTP
-     */
     public Resource loadFileAsResource(String fileName) {
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();

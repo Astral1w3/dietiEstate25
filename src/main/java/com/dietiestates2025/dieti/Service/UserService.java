@@ -8,17 +8,13 @@ import com.dietiestates2025.dieti.model.User;
 import com.dietiestates2025.dieti.repositories.RoleRepository; // <-- Importa il RoleRepository
 import com.dietiestates2025.dieti.repositories.UserRepository;
 import org.dozer.DozerBeanMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import com.dietiestates2025.dieti.dto.PasswordChangeRequestDTO; // <-- Importa il nuovo DTO
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder; // <-- Importa il PasswordEncoder
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -28,7 +24,6 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder; // <-- Aggiungi PasswordEncoder
     private final DozerBeanMapper dozerBeanMapper;
 
-    @Autowired // Usa @Autowired per l'iniezione tramite costruttore
     public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, DozerBeanMapper dozerBeanMapper) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

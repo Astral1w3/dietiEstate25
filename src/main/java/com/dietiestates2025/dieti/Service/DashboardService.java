@@ -3,10 +3,7 @@ package com.dietiestates2025.dieti.Service;
 import com.dietiestates2025.dieti.dto.DashboardDTO;
 import com.dietiestates2025.dieti.dto.PropertyDashboardDTO;
 import com.dietiestates2025.dieti.exception.ResourceNotFoundException;
-import com.dietiestates2025.dieti.model.Dashboard;
-import com.dietiestates2025.dieti.model.Image;
-import com.dietiestates2025.dieti.model.Property;
-import com.dietiestates2025.dieti.model.PropertyStats;
+import com.dietiestates2025.dieti.model.*;
 import com.dietiestates2025.dieti.repositories.BookedVisitRepository;
 import com.dietiestates2025.dieti.repositories.DashboardRepository;
 import com.dietiestates2025.dieti.repositories.OfferRepository;
@@ -26,7 +23,6 @@ public class DashboardService {
     private final BookedVisitRepository bookedVisitRepository;
     private final OfferRepository offerRepository;
 
-    // Inietta tutti i repository necessari per l'aggregazione dei dati
     public DashboardService(DashboardRepository dashboardRepository,
                             BookedVisitRepository bookedVisitRepository,
                             OfferRepository offerRepository) {
@@ -35,45 +31,44 @@ public class DashboardService {
         this.offerRepository = offerRepository;
     }
 
-    /**
-     * Aggrega tutti i dati necessari per la dashboard di un agente.
-     * @param agentEmail L'email dell'agente autenticato.
-     * @return Un DTO completo con tutte le statistiche.
-     */
     @Transactional(readOnly = true)
     public DashboardDTO getDashboardDataForAgent(String agentEmail) {
-        // 1. Recupera il dashboard dell'agente e, da lì, la lista delle sue proprietà
-        Dashboard agentDashboard = dashboardRepository.findById(agentEmail)
+        
+        Dashboard agentDashboard = dashboardRepository.findByEmailWithFullProperties(agentEmail)
             .orElseThrow(() -> new ResourceNotFoundException("Dashboard non trovato per l'agente: " + agentEmail));
 
-        List<Property> properties = agentDashboard.getProperties();
+        Set<Property> uniqueProperties = new HashSet<>(agentDashboard.getProperties());
+    
+        // Da qui in poi, lavora con la collezione di proprietà uniche.
+        if (uniqueProperties.isEmpty()) {
+            return buildEmptyDashboardDTO();
+        }
+
+        // Trasformiamo il Set in una List per le operazioni successive che la richiedono
+        List<Property> properties = new ArrayList<>(uniqueProperties);
         
-        // Se l'agente non ha proprietà, restituisci un DTO vuoto per evitare errori sul frontend
         if (properties == null || properties.isEmpty()) {
             return buildEmptyDashboardDTO();
         }
 
-        // 2. Calcola le statistiche globali per le StatCard
         long totalViews = properties.stream()
             .map(Property::getPropertyStats)
-            .filter(Objects::nonNull) // Ignora le proprietà che non hanno ancora statistiche
+            .filter(Objects::nonNull)
             .mapToLong(PropertyStats::getNumberOfViews)
             .sum();
 
         List<Integer> propertyIds = properties.stream().map(Property::getIdProperty).collect(Collectors.toList());
-        long totalBookedVisits = bookedVisitRepository.findByPropertyIdPropertyIn(propertyIds).size();
-        long totalOffersReceived = offerRepository.findByPropertyIdPropertyIn(propertyIds).size();
+        
+        long totalBookedVisits = bookedVisitRepository.countByPropertyIds(propertyIds);
+        long totalOffersReceived = offerRepository.countByPropertyIds(propertyIds);
+        
         long activeListings = properties.size();
-
-        // 3. Genera dati simulati per il grafico "vendite nel tempo"
         Map<String, Long> salesOverTime = generateMockSalesData();
 
-        // 4. Prepara la lista dettagliata di ogni proprietà per la tabella
         List<PropertyDashboardDTO> propertyDTOs = properties.stream()
-                .map(this::mapToPropertyDashboardDTO)
+                .map(this::mapToPropertyDashboardDTO) // Ora questa riga è di nuovo valida
                 .collect(Collectors.toList());
 
-        // 5. Costruisci e restituisci il DTO finale che contiene tutto
         return DashboardDTO.builder()
                 .totalViews(totalViews)
                 .bookedVisits(totalBookedVisits)
@@ -84,29 +79,38 @@ public class DashboardService {
                 .build();
     }
 
+    // --- METODO MANCANTE REINSERITO QUI ---
     /**
      * Metodo helper per mappare una singola entità Property al suo DTO per la dashboard.
-     * Utilizza i metodi del repository basati su ID per i conteggi, come da tua correzione.
      */
     private PropertyDashboardDTO mapToPropertyDashboardDTO(Property p) {
-        String fullAddress = p.getAddress().getStreet() + ", " + p.getAddress().getMunicipality().getMunicipalityName();
+        String fullAddress = p.getAddress() != null && p.getAddress().getMunicipality() != null
+            ? p.getAddress().getStreet() + ", " + p.getAddress().getMunicipality().getMunicipalityName()
+            : "Indirizzo non disponibile";
+            
         Integer propertyId = p.getIdProperty();
 
         String mainImageUrl = null;
-        if (p.getImages() != null && !p.getImages().isEmpty()) {
-            // Prendiamo la prima immagine come immagine principale
-            Image firstImage = p.getImages().get(0);
+        Set<Image> images = p.getImages();
+        if (images != null && !images.isEmpty()) {
+            Image firstImage = images.iterator().next(); 
             mainImageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/api/files/")
                     .path(firstImage.getFileName())
                     .toUriString();
         }
 
+        String saleTypeString = "N/A";
+        Set<SaleType> saleTypes = p.getSaleTypes();
+        if (saleTypes != null && !saleTypes.isEmpty()) {
+            saleTypeString = saleTypes.iterator().next().getSaleType();
+        }
+
         return PropertyDashboardDTO.builder()
                 .idProperty(propertyId)
                 .fullAddress(fullAddress)
-                .saleType(p.getSaleTypes().isEmpty() ? "N/A" : p.getSaleTypes().get(0).getSaleType())
-                .propertyState(p.getPropertyState().getState())
+                .saleType(saleTypeString)
+                .propertyState(p.getPropertyState() != null ? p.getPropertyState().getState() : "N/A")
                 .price(p.getPrice())
                 .mainImageUrl(mainImageUrl)
                 .viewCount(p.getPropertyStats() != null ? p.getPropertyStats().getNumberOfViews() : 0)
