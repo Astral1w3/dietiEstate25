@@ -1,5 +1,6 @@
 package com.dietiestates2025.dieti.model;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,7 +14,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User implements Serializable{
+
+    private static final long serialVersionUID = 1L; 
     @Id
     private String email;
     private String googleId;
