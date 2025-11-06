@@ -1,26 +1,24 @@
 package com.dietiestates2025.dieti.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.dietiestates2025.dieti.exception.ResourceNotFoundException;
+
+import jakarta.validation.Valid;
+
 import com.dietiestates2025.dieti.Service.PropertyService;
+import com.dietiestates2025.dieti.dto.ApiResponse;
 import com.dietiestates2025.dieti.dto.PagedResponseDTO;
 import com.dietiestates2025.dieti.dto.PropertyDTO;
+import com.dietiestates2025.dieti.dto.PropertyStateUpdateDTO;
 
 @RestController
 @RequestMapping("/api/properties")
@@ -39,62 +37,65 @@ public class PropertyController {
         @RequestParam String location,
         Pageable pageable
     ) {
-        // La chiamata al service ora restituisce il nostro DTO personalizzato
         PagedResponseDTO<PropertyDTO> response = propertyService.findPropertiesByLocationAvailable(location, pageable);
         return ResponseEntity.ok(response);
     }
 
-    
-    // --- FINE MODIFICA ---
-
-    // Metodo per ottenere una singola proprietà per ID.
-    // Ora non entrerà più in conflitto con /search.
     @GetMapping("/{propertyId}")
-    public ResponseEntity<?> getPropertyById(@PathVariable int propertyId) {
-        try {
-            PropertyDTO propertyDTO = propertyService.getPropertyById(propertyId);
-            return ResponseEntity.ok(propertyDTO);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<PropertyDTO> getPropertyById(@PathVariable int propertyId) {
+        // Rimosso try-catch. Se la proprietà non viene trovata,
+        // il service lancerà ResourceNotFoundException, che sarà
+        // gestita dal nostro GlobalExceptionHandler.
+        PropertyDTO propertyDTO = propertyService.getPropertyById(propertyId);
+        return ResponseEntity.ok(propertyDTO);
     }
-    
-    // ... il resto del controller rimane identico ...
 
     @PostMapping
-    public ResponseEntity<?> addProperty(
+    public ResponseEntity<PropertyDTO> addProperty(
         @RequestPart("propertyData") String propertyDataJson, 
         @RequestPart("images") List<MultipartFile> images,
         Authentication authentication
-    ) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente non autenticato.");
-        }
-        try {
-            PropertyDTO propertyDTO = objectMapper.readValue(propertyDataJson, PropertyDTO.class);
-            String userEmail = authentication.getName();
-            PropertyDTO savedPropertyDTO = propertyService.addPropertyAndImages(propertyDTO, images, userEmail); 
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedPropertyDTO);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errore nel parsing dei dati della proprietà: " + e.getMessage());
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    ) throws JsonProcessingException { // L'eccezione viene ora propagata
+        
+        // NOTA: Il controllo `if (authentication == null)` è stato rimosso.
+        // Se questo endpoint è protetto da Spring Security, un utente non
+        // autenticato non raggiungerà mai questo metodo. La sicurezza
+        // viene gestita a un livello superiore, mantenendo il controller pulito.
+
+        PropertyDTO propertyDTO = objectMapper.readValue(propertyDataJson, PropertyDTO.class);
+        String userEmail = authentication.getName(); // Recupera l'email in modo sicuro
+        
+        PropertyDTO savedPropertyDTO = propertyService.addPropertyAndImages(propertyDTO, images, userEmail); 
+        
+        // Risposta 201 CREATED, standard per la creazione di risorse.
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPropertyDTO);
     }
 
     @DeleteMapping("/{propertyId}")
-    public ResponseEntity<String> deleteProperty(@PathVariable int propertyId) {
-        boolean deleted = propertyService.deleteProperty(propertyId);
-        if (deleted) {
-            return ResponseEntity.ok("Property eliminata con successo.");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Property non trovata.");
-        }
+    public ResponseEntity<ApiResponse> deleteProperty(@PathVariable int propertyId) {
+        // La logica è stata spostata nel service. Ora il service lancia
+        // un'eccezione se la risorsa non esiste.
+        // In caso di successo, non restituiamo più una stringa semplice ma la nostra
+        // ApiResponse standard per coerenza.
+        propertyService.deleteProperty(propertyId);
+        return ResponseEntity.ok(new ApiResponse(true, "Proprietà eliminata con successo."));
     }
   
     @PostMapping("/{propertyId}/increment-view")
     public ResponseEntity<Void> incrementViewCount(@PathVariable Integer propertyId) {
         propertyService.incrementViewCount(propertyId);
-        return ResponseEntity.ok().build();
+        // ResponseEntity.accepted() (202) è semanticamente più corretto per
+        // operazioni che non hanno un risultato immediato da restituire.
+        return ResponseEntity.accepted().build();
     }
+
+    @PatchMapping("/{propertyId}/state")
+    public ResponseEntity<Void> updatePropertyState(
+        @PathVariable int propertyId, 
+        @Valid @RequestBody PropertyStateUpdateDTO stateUpdateDTO
+    ) {
+        propertyService.updatePropertyState(propertyId, stateUpdateDTO.getState());
+        return ResponseEntity.ok().build(); // Restituisce 200 OK senza corpo
+    }
+
 }

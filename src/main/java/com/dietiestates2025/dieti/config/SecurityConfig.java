@@ -50,19 +50,23 @@ public class SecurityConfig {
                 // === ENDPOINT PROTETTI PER RUOLI SPECIFICI (AGENT, MANAGER, ADMIN) ===
                 // L'agente può vedere le prenotazioni relative alle sue proprietà
                 .requestMatchers("/api/visits/agent-bookings").hasAnyRole("AGENT", "MANAGER", "ADMIN")
-
                 .requestMatchers("/api/offers/agent-offers").hasAnyRole("AGENT", "MANAGER", "ADMIN")
                 // La dashboard è accessibile solo a questi ruoli
                 .requestMatchers("/api/dashboard/**").hasAnyRole("AGENT", "MANAGER", "ADMIN")
 
-                // Creazione/modifica di proprietà (esempio di regola aggiuntiva)
+                // Creazione/modifica/cancellazione di proprietà
                 .requestMatchers(HttpMethod.POST, "/api/properties").hasAnyRole("AGENT", "MANAGER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/properties/**").hasAnyRole("AGENT", "MANAGER", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/properties/**").hasAnyRole("AGENT", "MANAGER", "ADMIN")
                 
+                // --- INIZIO BLOCCO MODIFICATO ---
+                // La regola per DELETE era già corretta.
+                .requestMatchers(HttpMethod.DELETE, "/api/properties/**").hasAnyRole("AGENT", "MANAGER", "ADMIN")
+                // AGGIUNTA: Protegge l'endpoint per contrassegnare una proprietà come venduta.
+                .requestMatchers(HttpMethod.POST, "/api/properties/*/sold").hasAnyRole("AGENT", "MANAGER", "ADMIN")
+                // --- FINE BLOCCO MODIFICATO ---
+
                 // === REGOLA FINALE ===
                 // Qualsiasi altra richiesta che non è stata ancora definita richiede l'autenticazione.
-                // Questa è una buona misura di sicurezza "catch-all".
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

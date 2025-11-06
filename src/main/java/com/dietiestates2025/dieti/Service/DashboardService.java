@@ -28,26 +28,33 @@ public class DashboardService {
         this.bookedVisitRepository = bookedVisitRepository;
         this.offerRepository = offerRepository;
     }
-
-    @Transactional(readOnly = true)
+  @Transactional(readOnly = true)
     public DashboardDTO getDashboardDataForAgent(String agentEmail) {
-        
         Dashboard agentDashboard = dashboardRepository.findByEmailWithFullProperties(agentEmail)
-            .orElseThrow(() -> new ResourceNotFoundException("Dashboard non trovato per l'agente: " + agentEmail));
+            .orElseThrow(() -> new ResourceNotFoundException("Dashboard non trovata per l'agente: " + agentEmail));
 
-        Set<Property> uniqueProperties = new HashSet<>(agentDashboard.getProperties());
-    
-        // Da qui in poi, lavora con la collezione di proprietà uniche.
-        if (uniqueProperties.isEmpty()) {
+        // --- LA CORREZIONE È QUI ---
+        // 1. Prendiamo la lista originale che può contenere duplicati.
+        // 2. La inseriamo in un new HashSet() per rimuovere automaticamente i duplicati.
+        // 3. Creiamo una nuova ArrayList a partire dal Set de-duplicato.
+        List<Property> properties = new ArrayList<>(new HashSet<>(agentDashboard.getProperties()));
+
+        if (properties.isEmpty()) {
             return buildEmptyDashboardDTO();
         }
 
-        // Trasformiamo il Set in una List per le operazioni successive che la richiedono
-        List<Property> properties = new ArrayList<>(uniqueProperties);
-        
-        if (properties == null || properties.isEmpty()) {
-            return buildEmptyDashboardDTO();
-        }
+        List<Integer> propertyIds = properties.stream()
+                .map(Property::getIdProperty)
+                .collect(Collectors.toList());
+
+        // Il resto della logica di ottimizzazione rimane invariato e corretto
+        Map<Integer, Long> visitsCountMap = bookedVisitRepository.countVisitsByPropertyIdsGrouped(propertyIds)
+                .stream()
+                .collect(Collectors.toMap(BookedVisitRepository.PropertyCount::getPropertyId, BookedVisitRepository.PropertyCount::getCount));
+
+        Map<Integer, Long> offersCountMap = offerRepository.countOffersByPropertyIdsGrouped(propertyIds)
+                .stream()
+                .collect(Collectors.toMap(OfferRepository.PropertyCount::getPropertyId, OfferRepository.PropertyCount::getCount));
 
         long totalViews = properties.stream()
             .map(Property::getPropertyStats)
@@ -55,52 +62,41 @@ public class DashboardService {
             .mapToLong(PropertyStats::getNumberOfViews)
             .sum();
 
-        List<Integer> propertyIds = properties.stream().map(Property::getIdProperty).collect(Collectors.toList());
-        
-        long totalBookedVisits = bookedVisitRepository.countByPropertyIds(propertyIds);
-        long totalOffersReceived = offerRepository.countByPropertyIds(propertyIds);
-        
-        long activeListings = properties.size();
+        long totalBookedVisits = visitsCountMap.values().stream().mapToLong(Long::longValue).sum();
+        long totalOffersReceived = offersCountMap.values().stream().mapToLong(Long::longValue).sum();
 
         List<PropertyDashboardDTO> propertyDTOs = properties.stream()
-                .map(this::mapToPropertyDashboardDTO) // Ora questa riga è di nuovo valida
+                .map(p -> mapToPropertyDashboardDTO(p, visitsCountMap, offersCountMap))
                 .collect(Collectors.toList());
 
         return DashboardDTO.builder()
                 .totalViews(totalViews)
                 .bookedVisits(totalBookedVisits)
                 .offersReceived(totalOffersReceived)
-                .activeListings(activeListings)
+                .activeListings(properties.size())
                 .properties(propertyDTOs)
                 .build();
     }
-
-    // --- METODO MANCANTE REINSERITO QUI ---
-    /**
-     * Metodo helper per mappare una singola entità Property al suo DTO per la dashboard.
-     */
-    private PropertyDashboardDTO mapToPropertyDashboardDTO(Property p) {
-        String fullAddress = p.getAddress() != null && p.getAddress().getMunicipality() != null
+    
+    private PropertyDashboardDTO mapToPropertyDashboardDTO(Property p, Map<Integer, Long> visitsCountMap, Map<Integer, Long> offersCountMap) {
+        String fullAddress = (p.getAddress() != null && p.getAddress().getMunicipality() != null)
             ? p.getAddress().getStreet() + ", " + p.getAddress().getMunicipality().getMunicipalityName()
             : "Indirizzo non disponibile";
-            
+
         Integer propertyId = p.getIdProperty();
+        
+        String mainImageUrl = p.getImages().stream()
+                .findFirst()
+                .map(image -> ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/api/files/")
+                        .path(image.getFileName())
+                        .toUriString())
+                .orElse(null);
 
-        String mainImageUrl = null;
-        Set<Image> images = p.getImages();
-        if (images != null && !images.isEmpty()) {
-            Image firstImage = images.iterator().next(); 
-            mainImageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/api/files/")
-                    .path(firstImage.getFileName())
-                    .toUriString();
-        }
-
-        String saleTypeString = "N/A";
-        Set<SaleType> saleTypes = p.getSaleTypes();
-        if (saleTypes != null && !saleTypes.isEmpty()) {
-            saleTypeString = saleTypes.iterator().next().getSaleType();
-        }
+        String saleTypeString = p.getSaleTypes().stream()
+                .findFirst()
+                .map(SaleType::getSaleType)
+                .orElse("N/A");
 
         return PropertyDashboardDTO.builder()
                 .idProperty(propertyId)
@@ -110,12 +106,11 @@ public class DashboardService {
                 .price(p.getPrice())
                 .mainImageUrl(mainImageUrl)
                 .viewCount(p.getPropertyStats() != null ? p.getPropertyStats().getNumberOfViews() : 0)
-                .bookedVisitsCount(bookedVisitRepository.countByPropertyIdProperty(propertyId))
-                .offersCount(offerRepository.countByPropertyIdProperty(propertyId))
+                .bookedVisitsCount(visitsCountMap.getOrDefault(propertyId, 0L))
+                .offersCount(offersCountMap.getOrDefault(propertyId, 0L))
                 .build();
     }
 
-    /** Helper per restituire un DTO vuoto e valido. */
     private DashboardDTO buildEmptyDashboardDTO() {
         return DashboardDTO.builder()
             .totalViews(0)
@@ -126,5 +121,4 @@ public class DashboardService {
             .salesOverTime(new LinkedHashMap<>())
             .build();
     }
-
 }

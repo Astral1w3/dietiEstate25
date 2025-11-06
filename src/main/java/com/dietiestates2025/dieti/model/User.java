@@ -1,12 +1,10 @@
 package com.dietiestates2025.dieti.model;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+import java.util.List;
 
 @Entity(name = "usertable")
 @Getter
@@ -14,16 +12,15 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User implements Serializable{
+public class User implements Serializable {
 
-    private static final long serialVersionUID = 1L; 
+    private static final long serialVersionUID = 1L;
     @Id
     private String email;
     private String googleId;
     private String username;
     private String userPassword;
 
-    
     @ManyToOne
     @JoinColumn(name = "id_agency", referencedColumnName = "idAgency")
     private Agency agency;
@@ -44,7 +41,7 @@ public class User implements Serializable{
     @OneToMany(mappedBy = "user")
     private List<BookedVisit> bookedVisits;
 
-    public User(String email, String username, String userPassword, Agency agency, Role role){
+    public User(String email, String username, String userPassword, Agency agency, Role role) {
         this.email = email;
         this.username = username;
         this.userPassword = userPassword;
@@ -52,23 +49,12 @@ public class User implements Serializable{
         this.role = role;
     }
 
-    public String getRole(){
-        return role.getRoleName();
-    }
-
-    public List<BuyingAndSelling> getSellings() {
-        String roleName = this.role.getRoleName().toUpperCase();
-        if (roleName.equals("AGENT") || roleName.equals("ADMIN") || roleName.equals("MANAGER")) {
-            return sellings;
-        }
-        return Collections.emptyList();
+    // Questo getter ora restituisce semplicemente il nome del ruolo.
+    // L'oggetto Role è ancora accessibile tramite getRoleEntity() se necessario.
+    public String getRole() {
+        return role != null ? role.getRoleName() : null;
     }
     
-    public List<BuyingAndSelling> getBuyings() {
-        if ("USER".equalsIgnoreCase(this.role.getRoleName())) {
-            return buyings;
-        }
-        return Collections.emptyList();
-    }
-
+    // NOTA: I metodi getSellings() e getBuyings() ora utilizzano l'implementazione
+    // di default di Lombok. La logica di controllo del ruolo è stata spostata nel UserService.
 }

@@ -6,20 +6,32 @@ import org.springframework.data.jpa.repository.Query;         // <-- IMPORT AGGI
 import org.springframework.data.repository.query.Param;    // <-- IMPORT AGGIUNTO
 import org.springframework.stereotype.Repository;
 
+import java.util.Date; 
 import java.util.List;
 
 @Repository
 public interface BookedVisitRepository extends JpaRepository<BookedVisit, Integer> {
 
-    // Trova tutte le visite prenotate per un determinato immobile
-    List<BookedVisit> findByPropertyIdProperty(Integer propertyId);
+    interface PropertyCount {
+        Integer getPropertyId();
+        Long getCount();
+    }
 
-    /**
-     * Trova tutte le visite prenotate per una lista di ID di proprietà.
-     * @param propertyIds La lista degli ID delle proprietà dell'agente.
-     * @return Una lista di visite prenotate.
-     */
-    List<BookedVisit> findByPropertyIdPropertyIn(List<Integer> propertyIds);
+    // Nuovo metodo per OTTIMIZZAZIONE 1
+    @Query("SELECT bv.visitDate FROM BookedVisit bv WHERE bv.property.idProperty = :propertyId")
+    List<Date> findVisitDatesByPropertyId(@Param("propertyId") Integer propertyId);
+
+    // Nuovo metodo per il controllo di ROBUSTEZZA
+    boolean existsByPropertyIdPropertyAndVisitDate(Integer propertyId, Date visitDate);
+
+    // Metodo modificato per OTTIMIZZAZIONE 2 (N+1 Query)
+    @Query("SELECT bv FROM BookedVisit bv " +
+           "JOIN FETCH bv.user " +
+           "JOIN FETCH bv.property p " +
+           "JOIN FETCH p.address a " +
+           "JOIN FETCH a.municipality " +
+           "WHERE p.idProperty IN :propertyIds")
+    List<BookedVisit> findWithDetailsByPropertyIds(@Param("propertyIds") List<Integer> propertyIds);
 
 
     /**
@@ -38,4 +50,16 @@ public interface BookedVisitRepository extends JpaRepository<BookedVisit, Intege
      */
     @Query("SELECT COUNT(b) FROM BookedVisit b WHERE b.property.idProperty IN :propertyIds")
     long countByPropertyIds(@Param("propertyIds") List<Integer> propertyIds);
+
+    @Query("SELECT bv.property.idProperty as propertyId, COUNT(bv.id) as count " +
+           "FROM BookedVisit bv " +
+           "WHERE bv.property.idProperty IN :propertyIds " +
+           "GROUP BY bv.property.idProperty")
+    List<PropertyCount> countVisitsByPropertyIdsGrouped(@Param("propertyIds") List<Integer> propertyIds);
+
+
+
+    // Il vecchio metodo può essere rimosso o tenuto se usato altrove
+    List<BookedVisit> findByPropertyIdProperty(Integer propertyId);
+    List<BookedVisit> findByPropertyIdPropertyIn(List<Integer> propertyIds);
 }

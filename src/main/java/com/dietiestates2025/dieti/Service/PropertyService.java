@@ -115,12 +115,34 @@ public class PropertyService {
         return mapToDtoWithImageUrls(finalProperty);
     }
     
-    public boolean deleteProperty(int propertyId) {
-        if(repo.existsById(propertyId)){
-            repo.deleteById(propertyId);
-            return true;
+   
+    /**
+     * Aggiorna lo stato di una proprietà in modo EFFICIENTE.
+     * @param propertyId L'ID della proprietà da aggiornare.
+     * @param newStateName Il nome del nuovo stato.
+     */
+    @Transactional
+    public void updatePropertyState(int propertyId, String newStateName) {
+        // 1. Trova solo l'ID del nuovo stato
+        PropertyState newState = propertyStateRepository.findByStateIgnoreCase(newStateName)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                "Stato '" + newStateName + "' non valido o non trovato nel database."
+            ));
+
+        // 2. Esegui la query UPDATE diretta
+        repo.updatePropertyState(propertyId, newState.getId());
+    }
+
+    /**
+     * Cancella una proprietà. Questa funzione era già presente e corretta.
+     * @param propertyId L'ID della proprietà da cancellare.
+     */
+    @Transactional
+    public void deleteProperty(int propertyId) {
+        if (!repo.existsById(propertyId)) {
+            throw new ResourceNotFoundException("Proprietà non trovata con ID: " + propertyId);
         }
-        return false;
+        repo.deleteById(propertyId);
     }
 
     public PropertyDTO getPropertyById(int propertyId) {

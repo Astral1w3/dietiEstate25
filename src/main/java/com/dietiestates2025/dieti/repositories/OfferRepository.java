@@ -9,6 +9,15 @@ import org.springframework.data.repository.query.Param;
 import com.dietiestates2025.dieti.model.Offer;
 
 public interface OfferRepository extends JpaRepository<Offer, Integer> {
+
+    /**
+     * Interfaccia di proiezione annidata per i conteggi raggruppati.
+     */
+    interface PropertyCount {
+        Integer getPropertyId();
+        Long getCount();
+    }
+
     /**
      * Trova tutte le offerte per una lista di ID di proprietà.
      * @param propertyIds La lista degli ID delle proprietà dell'agente.
@@ -29,5 +38,11 @@ public interface OfferRepository extends JpaRepository<Offer, Integer> {
 
     @Query("SELECT COUNT(o) FROM Offer o WHERE o.property.idProperty IN :propertyIds")
     long countByPropertyIds(@Param("propertyIds") List<Integer> propertyIds);
+
+    @Query("SELECT o.property.idProperty as propertyId, COUNT(o.id) as count " +
+           "FROM Offer o " +
+           "WHERE o.property.idProperty IN :propertyIds " +
+           "GROUP BY o.property.idProperty")
+    List<PropertyCount> countOffersByPropertyIdsGrouped(@Param("propertyIds") List<Integer> propertyIds);
     
 }

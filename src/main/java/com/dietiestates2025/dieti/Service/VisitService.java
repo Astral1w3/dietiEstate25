@@ -13,7 +13,6 @@ import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.dietiestates2025.dieti.dto.BookingDetailsDTO; // <-- Importa il nuovo DTO
-import com.dietiestates2025.dieti.model.Dashboard; // <-- Importa Dashboard
 import com.dietiestates2025.dieti.repositories.DashboardRepository; // <-- Importa DashboardRepository
 
 import java.util.Collections;
@@ -43,86 +42,62 @@ public class VisitService {
         this.dozerBeanMapper = dozerBeanMapper;
         this.dashboardRepository = dashboardRepository;
     }
-
-    /**
-     * Recupera tutte le date già prenotate per un immobile specifico.
-     * @param propertyId L'ID dell'immobile.
-     * @return Una lista di oggetti Date.
-     */
-    @Transactional(readOnly = true)
+ @Transactional(readOnly = true)
     public List<Date> getBookedDatesForProperty(Integer propertyId) {
-        // Verifica se l'immobile esiste
+        // OTTIMIZZAZIONE 1: Invece di caricare intere entità BookedVisit
+        // per poi estrarre solo la data, chiediamo al database solo la colonna
+        // che ci serve. Questo è molto più efficiente.
         if (!propertyRepository.existsById(propertyId)) {
-            throw new ResourceNotFoundException("Property not found with id: " + propertyId);
+            throw new ResourceNotFoundException("Proprietà non trovata con id: " + propertyId);
         }
-        
-        List<BookedVisit> visits = bookedVisitRepository.findByPropertyIdProperty(propertyId);
-        
-        // Estrai solo le date dalla lista di visite
-        return visits.stream()
-                     .map(BookedVisit::getVisitDate)
-                     .collect(Collectors.toList());
+        return bookedVisitRepository.findVisitDatesByPropertyId(propertyId);
     }
 
-    /**
-     * Crea una nuova prenotazione per una visita.
-     * @param request DTO con i dati della richiesta.
-     * @param userEmail L'email dell'utente autenticato che sta prenotando.
-     * @return Il DTO della visita creata.
-     */
     @Transactional
     public BookedVisitDTO createBookedVisit(BookVisitRequestDTO request, String userEmail) {
-        // Trova l'immobile o lancia un'eccezione
         Property property = propertyRepository.findById(request.getPropertyId())
-            .orElseThrow(() -> new ResourceNotFoundException("Property not found with id: " + request.getPropertyId()));
+            .orElseThrow(() -> new ResourceNotFoundException("Proprietà non trovata con id: " + request.getPropertyId()));
 
-        // Trova l'utente o lancia un'eccezione
         User user = userRepository.findById(userEmail)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + userEmail));
+            .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con email: " + userEmail));
 
-        // (Opzionale ma raccomandato) Controlla se la data è già stata prenotata per evitare race condition
-        // ...
+        // ROBUSTEZZA: Aggiungiamo il controllo per prevenire doppie prenotazioni.
+        // Se una visita per quella proprietà in quella data esiste già, lanciamo
+        // un'eccezione che il GlobalExceptionHandler trasformerà in un 409 Conflict.
+        if (bookedVisitRepository.existsByPropertyIdPropertyAndVisitDate(request.getPropertyId(), request.getVisitDate())) {
+            throw new IllegalStateException("La data richiesta per questa proprietà è già stata prenotata.");
+        }
 
-        // Crea la nuova entità BookedVisit
         BookedVisit newVisit = BookedVisit.builder()
             .property(property)
             .user(user)
             .visitDate(request.getVisitDate())
             .build();
 
-        // Salva nel database
         BookedVisit savedVisit = bookedVisitRepository.save(newVisit);
-
-        // Mappa l'entità salvata in un DTO e restituiscila
         return dozerBeanMapper.map(savedVisit, BookedVisitDTO.class);
     }
 
-        // --- INIZIO NUOVO METODO PER LA DASHBOARD ---
     @Transactional(readOnly = true)
     public List<BookingDetailsDTO> getBookingsForAgent(String agentEmail) {
-        // 1. Trova il dashboard dell'agente per accedere alle sue proprietà
-        Dashboard agentDashboard = dashboardRepository.findById(agentEmail)
-            .orElseThrow(() -> new ResourceNotFoundException("Dashboard non trovato per l'agente con email: " + agentEmail));
+        // La logica di base per trovare gli ID delle proprietà è corretta.
+        List<Integer> propertyIds = dashboardRepository.findPropertyIdsByEmail(agentEmail);
 
-        // Se l'agente non ha proprietà, restituisci una lista vuota
-        if (agentDashboard.getProperties() == null || agentDashboard.getProperties().isEmpty()) {
+        if (propertyIds.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // 2. Estrai gli ID di tutte le proprietà dell'agente
-        List<Integer> propertyIds = agentDashboard.getProperties().stream()
-                .map(Property::getIdProperty)
-                .collect(Collectors.toList());
+        // OTTIMIZZAZIONE 2 (N+1 QUERY): Invece di una query generica, usiamo una
+        // query personalizzata con JOIN FETCH. Questo carica tutte le visite e le
+        // relative entità (User, Property, Address) in UNA SOLA query, prevenendo
+        // centinaia di chiamate al DB nel ciclo di mappatura.
+        List<BookedVisit> visits = bookedVisitRepository.findWithDetailsByPropertyIds(propertyIds);
 
-        // 3. Usa il nuovo metodo del repository per trovare tutte le visite per quegli ID
-        List<BookedVisit> visits = bookedVisitRepository.findByPropertyIdPropertyIn(propertyIds);
-
-        // 4. Mappa le entità BookedVisit nel DTO dettagliato
         return visits.stream()
                      .map(this::mapToBookingDetailsDTO)
                      .collect(Collectors.toList());
     }
-
+    
     /**
      * Metodo helper per mappare una entità BookedVisit a un BookingDetailsDTO.
      */
