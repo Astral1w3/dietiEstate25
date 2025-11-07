@@ -11,6 +11,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -30,7 +31,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(withDefaults())
+            // Applica la configurazione CORS definita nel bean 'corsConfigurationSource'
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) 
             .csrf(csrf -> csrf.disable()) //NOSONAR: App is stateless, authentication is done via JWT in header
             .authorizeHttpRequests(auth -> auth
                 // === ENDPOINT PUBBLICI (accessibili a tutti) ===
@@ -58,12 +60,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/properties").hasAnyRole("AGENT", "MANAGER", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/properties/**").hasAnyRole("AGENT", "MANAGER", "ADMIN")
                 
-                // --- INIZIO BLOCCO MODIFICATO ---
                 // La regola per DELETE era già corretta.
                 .requestMatchers(HttpMethod.DELETE, "/api/properties/**").hasAnyRole("AGENT", "MANAGER", "ADMIN")
                 // AGGIUNTA: Protegge l'endpoint per contrassegnare una proprietà come venduta.
                 .requestMatchers(HttpMethod.POST, "/api/properties/*/sold").hasAnyRole("AGENT", "MANAGER", "ADMIN")
-                // --- FINE BLOCCO MODIFICATO ---
 
                 // === REGOLA FINALE ===
                 // Qualsiasi altra richiesta che non è stata ancora definita richiede l'autenticazione.
@@ -77,11 +77,21 @@ public class SecurityConfig {
     
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        // ... (la tua configurazione CORS rimane invariata)
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); 
+        
+        // --- INIZIO BLOCCO MODIFICATO ---
+        
+        // Sostituisci "<nome-casuale>.azurestaticapps.net" con l'URL REALE del tuo frontend!
+        // Ho lasciato localhost:3000 per permetterti di continuare a sviluppare in locale.
+        configuration.setAllowedOrigins(List.of(
+            "http://localhost:3000", 
+            "https://gentle-cliff-05689dc03.3.azurestaticapps.net/" 
+        ));
+        
+        // --- FINE BLOCCO MODIFICATO ---
+        
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); 
-        configuration.setAllowedHeaders(Arrays.asList("*")); 
+        configuration.setAllowedHeaders(List.of("*")); 
         configuration.setAllowCredentials(true); 
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

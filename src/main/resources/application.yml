@@ -1,21 +1,18 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dietiestates2025v3.postgres.database.azure.com:5432/postgres?sslmode=require
-    username: postgres
-    password: ${DB_PASSWORD}
+    # Questi valori verranno presi dalle variabili d'ambiente
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
   jpa: 
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # Puoi lasciare 'update' per ora, ma in produzione si usa spesso 'validate' o 'none'
     show-sql: true
 
   servlet:
     multipart:
       enabled: true
-      location: ./uploads
+      location: ./src/uploads
       max-file-size: 8MB
       max-request-size: 8MB
-  application:
-    security:
-      jwt:
-        secret-key: ${JWT_SECRET:yourGeneratedBase64Key-oJb8V8Yzuw8bFpQ8g7F2aK3eP1cV6sD0lB7jN9hT5yE=}
