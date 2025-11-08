@@ -44,6 +44,7 @@ public class FileStorageService {
             throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
+    
 
     /**
      * Stores an uploaded file to the configured storage location.
