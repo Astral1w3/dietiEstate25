@@ -20,7 +20,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "offer") // Assicuriamoci che il nome della tabella sia esatto
+@Table(name = "offer")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,21 +37,16 @@ public class Offer {
     private BigDecimal offerPrice;
 
     @ManyToOne
-    // La colonna per la proprietà sembra essere 'id_property'
     @JoinColumn(name = "id_property") 
     private Property property;
 
     @JsonIgnore
     @ManyToOne
-    // La colonna per l'utente è 'email'
     @JoinColumn(name = "email") 
     private User user;
 
-    // --- INIZIO DELLA CORREZIONE PRINCIPALE ---
 
     @ManyToOne
-    // Diciamo a JPA di usare la colonna 'id_offer_state' per gestire la relazione.
-    // Questa è la colonna che il DB richiede come NOT NULL.
     @JoinColumn(name = "id_offer_state", referencedColumnName = "id", nullable = false)
     private OfferState offerState;
     

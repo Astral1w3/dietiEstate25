@@ -21,7 +21,6 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    // Iniezione tramite costruttore: best practice
     public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
@@ -30,9 +29,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationRequest request) {
-        // Il blocco try-catch è stato rimosso. Se le credenziali sono errate,
-        // authenticationManager.authenticate lancerà BadCredentialsException,
-        // che verrà gestita dal nostro GlobalExceptionHandler.
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
@@ -45,8 +41,6 @@ public class AuthController {
 
     @PostMapping("/google-login")
     public ResponseEntity<AuthenticationResponse> googleLogin(@RequestBody GoogleLoginRequest googleLoginRequest) {
-        // La logica complessa di "login o registrazione" è stata spostata nel UserService.
-        // Il controller ora ha solo una responsabilità: orchestrare.
         final UserDetails userDetails = userService.processGoogleLogin(googleLoginRequest);
         final String jwt = jwtUtil.generateToken(userDetails);
 
@@ -55,11 +49,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDTO> registerUser(@RequestBody RegisterRequestDTO registerRequest) {
-        // Anche qui, nessun try-catch. Se l'utente esiste già, userService.registerUser
-        // lancerà IllegalStateException, gestita centralmente.
         UserDTO createdUser = userService.registerUser(registerRequest);
         
-        // Manteniamo la risposta 201 CREATED che è corretta dal punto di vista semantico REST.
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 }

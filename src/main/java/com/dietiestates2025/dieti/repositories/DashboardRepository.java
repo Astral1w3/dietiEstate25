@@ -12,10 +12,8 @@ public interface DashboardRepository extends JpaRepository<Dashboard, String> {
 
     Optional<Dashboard> findByUserEmail(String email);
 
-    // --- NUOVO METODO OTTIMIZZATO ---
     @Query("SELECT d FROM Dashboard d " +
            "LEFT JOIN FETCH d.properties p " +
-           // Aggiungiamo i fetch per tutte le relazioni delle proprietà che ci servono nella dashboard
            "LEFT JOIN FETCH p.address a " +
            "LEFT JOIN FETCH a.municipality m " +
            "LEFT JOIN FETCH p.propertyState ps " +

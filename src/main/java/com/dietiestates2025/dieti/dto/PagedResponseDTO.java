@@ -11,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 public class PagedResponseDTO<T> {
     
-    private List<T> content; // La lista degli elementi della pagina corrente (es. PropertyDTO)
-    private int currentPage;   // Il numero della pagina corrente
-    private long totalElements; // Il numero totale di elementi in tutte le pagine
-    private int totalPages;    // Il numero totale di pagine
-    private boolean isLast;      // True se questa è l'ultima pagina
+    private List<T> content;
+    private int currentPage;
+    private long totalElements;
+    private int totalPages;
+    private boolean isLast;
 }

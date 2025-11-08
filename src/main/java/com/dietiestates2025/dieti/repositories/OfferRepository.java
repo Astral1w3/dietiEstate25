@@ -27,7 +27,6 @@ public interface OfferRepository extends JpaRepository<Offer, Integer> {
 
     List<Offer> findByPropertyIdProperty(Integer propertyId);
 
-    // --- METODO CORRETTO COME HAI SUGGERITO ---
     /**
      * Conta il numero di offerte ricevute per un dato ID di proprietà.
      * @param propertyId L'ID della proprietà.

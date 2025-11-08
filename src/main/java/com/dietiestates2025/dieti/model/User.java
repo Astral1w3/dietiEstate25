@@ -49,12 +49,8 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    // Questo getter ora restituisce semplicemente il nome del ruolo.
-    // L'oggetto Role è ancora accessibile tramite getRoleEntity() se necessario.
     public String getRole() {
         return role != null ? role.getRoleName() : null;
     }
     
-    // NOTA: I metodi getSellings() e getBuyings() ora utilizzano l'implementazione
-    // di default di Lombok. La logica di controllo del ruolo è stata spostata nel UserService.
 }

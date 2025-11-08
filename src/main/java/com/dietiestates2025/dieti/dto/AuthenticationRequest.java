@@ -3,9 +3,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data // Genera getter, setter, toString(), equals() e hashCode()
-@NoArgsConstructor // Genera un costruttore senza argomenti
-@AllArgsConstructor // Genera un costruttore con tutti gli argomenti
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthenticationRequest {
     private String email;
     private String password;

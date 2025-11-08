@@ -9,12 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user") // Unificato il path di base per coerenza
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
 
-    // L'iniezione delle dipendenze tramite costruttore è una best practice
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -27,8 +26,6 @@ public class UserController {
 
     @PatchMapping("/change-password")
     public ResponseEntity<ApiResponse> changePassword(@RequestBody PasswordChangeRequestDTO request) {
-        // La logica di try-catch è stata spostata nel GlobalExceptionHandler.
-        // Il controller è ora più pulito e si concentra solo sul flusso felice.
         userService.changeUserPassword(request);
         return ResponseEntity.ok(new ApiResponse(true, "Password aggiornata con successo."));
     }

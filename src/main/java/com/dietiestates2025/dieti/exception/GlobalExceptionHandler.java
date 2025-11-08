@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-// @ControllerAdvice permette di centralizzare la gestione delle eccezioni per tutti i controller.
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -48,17 +47,13 @@ public class GlobalExceptionHandler {
 
      @ExceptionHandler({JsonProcessingException.class, IOException.class})
     public ResponseEntity<ApiResponse> handleJsonParsingException(Exception ex, WebRequest request) {
-        // Uniamo IOException e JsonProcessingException poiché sono correlate a I/O e parsing.
         ApiResponse apiResponse = new ApiResponse(false, "Errore nei dati inviati: il formato JSON non è valido.");
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 
-    // Un gestore generico per tutte le altre eccezioni non catturate
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGlobalException(Exception ex, WebRequest request) {
         ApiResponse apiResponse = new ApiResponse(false, "Si è verificato un errore interno. Riprova più tardi.");
-        // È una buona pratica registrare l'eccezione effettiva per il debug
-        // log.error("Unhandled exception: ", ex);
         return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

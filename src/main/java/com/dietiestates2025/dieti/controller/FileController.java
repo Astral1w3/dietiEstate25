@@ -31,35 +31,29 @@ public class FileController {
         this.imageRepository = ir;
     }
 
-    // --- ENDPOINT PER L'UPLOAD DI UNA SINGOLA IMMAGINE ---
     @PostMapping("/properties/{propertyId}/images")
     public ResponseEntity<String> uploadImage(@PathVariable int propertyId, @RequestParam("file") MultipartFile file) {
         Property property = propertyRepository.findById(propertyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Property not found with id: " + propertyId));
 
-        // 1. Salva il file sul disco e ottieni il nome univoco
         String fileName = fileStorageService.storeFile(file);
 
-        // 2. Crea il record nel database
         Image image = new Image(fileName, property);
         imageRepository.save(image);
         
-        // 3. Costruisci l'URL completo per la risposta
         String fileDownloadUri = buildFileUri(fileName);
 
         return ResponseEntity.ok(fileDownloadUri);
     }
     
-    // --- ENDPOINT PER SERVIRE (VISUALIZZARE) LE IMMAGINI ---
     @GetMapping("/files/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         Resource resource = fileStorageService.loadFileAsResource(fileName);
 
-        String contentType = "application/octet-stream"; // Default
+        String contentType = "application/octet-stream";
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (IOException ex) {
-            // Log a warning or handle as needed
         }
 
         return ResponseEntity.ok()
@@ -68,7 +62,6 @@ public class FileController {
                 .body(resource);
     }
 
-    // Metodo helper per costruire l'URL
     private String buildFileUri(String fileName) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/files/")

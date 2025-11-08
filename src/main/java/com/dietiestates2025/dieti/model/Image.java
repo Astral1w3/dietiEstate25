@@ -14,17 +14,14 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idImage;
 
-    // Salviamo solo il nome del file generato. È più sicuro e flessibile.
     @Column(nullable = false, unique = true)
     private String fileName;
 
-    // Relazione con la Proprietà
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idProperty", nullable = false)
-    @JsonIgnore // FONDAMENTALE per evitare cicli infiniti quando si converte in JSON
+    @JsonIgnore
     private Property property;
 
-    // Costruttore utile
     public Image(String fileName, Property property) {
         this.fileName = fileName;
         this.property = property;

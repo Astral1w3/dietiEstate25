@@ -1,14 +1,14 @@
 package com.dietiestates2025.dieti.dto;
 
 import java.math.BigDecimal;
-import lombok.AllArgsConstructor; // <-- IMPORTA QUESTO
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor; // <-- IMPORTA QUESTO
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor    // <-- AGGIUNGI QUESTA ANNOTAZIONE
+@NoArgsConstructor
 @AllArgsConstructor 
 public class PropertyDashboardDTO {
     private Integer idProperty;
@@ -17,7 +17,6 @@ public class PropertyDashboardDTO {
     private String propertyState;
     private BigDecimal price;
     private String mainImageUrl;
-    // Conteggi aggregati per questa proprietà
     private long viewCount;
     private long bookedVisitsCount;
     private long offersCount;

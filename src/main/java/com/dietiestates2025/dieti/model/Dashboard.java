@@ -24,7 +24,6 @@ public class Dashboard {
     private String email;
 
     private int numberOfSales;
-    //private int numberOfOffers;
 
     @JsonIgnore
     @OneToOne

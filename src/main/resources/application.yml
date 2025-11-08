@@ -13,6 +13,6 @@ spring:
   servlet:
     multipart:
       enabled: true
-      location: ./src/uploads
+      location: ./uploads
       max-file-size: 8MB
       max-request-size: 8MB

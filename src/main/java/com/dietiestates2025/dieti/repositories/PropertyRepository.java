@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.domain.Page;         // <-- IMPORT AGGIUNTO
-import org.springframework.data.domain.Pageable;       // <-- IMPORT AGGIUNTO
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.dietiestates2025.dieti.model.Property;
 
 public interface PropertyRepository extends JpaRepository<Property, Integer> {
@@ -24,29 +24,26 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
     List<Property> findByLocationIgnoreCase(@Param("location") String location);
 
 
-    // Query 1: Modificata per una ricerca più specifica.
     @Query(value = "SELECT p.idProperty FROM Property p " +
                    "JOIN p.address a " +
                    "JOIN a.municipality m " +
                    "JOIN m.province prov " +
-                   "JOIN prov.region r " + // <-- JOIN ALLA REGIONE AGGIUNTO
+                   "JOIN prov.region r " +
                    "WHERE p.propertyState.id = :stateId AND (" +
-                   // "   LOWER(a.street) LIKE CONCAT('%', :location, '%') OR " + // <-- RIGA RIMOSSA
                    "   LOWER(m.municipalityName) LIKE CONCAT('%', :location, '%') OR " +
                    "   LOWER(prov.provinceName) LIKE CONCAT('%', :location, '%') OR " +
-                   "   LOWER(r.regionName) LIKE CONCAT('%', :location, '%') OR " + // <-- RIGA AGGIUNTA
+                   "   LOWER(r.regionName) LIKE CONCAT('%', :location, '%') OR " +
                    "   LOWER(prov.acronym) LIKE CONCAT('%', :location, '%')" +
                    ")",
             countQuery = "SELECT COUNT(p.idProperty) FROM Property p " +
                          "JOIN p.address a " +
                          "JOIN a.municipality m " +
                          "JOIN m.province prov " +
-                         "JOIN prov.region r " + // <-- JOIN ALLA REGIONE AGGIUNTO ANCHE QUI
+                         "JOIN prov.region r " +
                          "WHERE p.propertyState.id = :stateId AND (" +
-                         // "LOWER(a.street) LIKE CONCAT('%', :location, '%') OR " + // <-- RIGA RIMOSSA
                          "LOWER(m.municipalityName) LIKE CONCAT('%', :location, '%') OR " +
                          "LOWER(prov.provinceName) LIKE CONCAT('%', :location, '%') OR " +
-                         "LOWER(r.regionName) LIKE CONCAT('%', :location, '%') OR " + // <-- RIGA AGGIUNTA
+                         "LOWER(r.regionName) LIKE CONCAT('%', :location, '%') OR " +
                          "LOWER(prov.acronym) LIKE CONCAT('%', :location, '%'))")
     Page<Integer> findIdsByLocationAndState(
             @Param("location") String location,
@@ -54,7 +51,6 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
             Pageable pageable
     );
 
-    // Query 2: Carica tutti i dettagli per una lista specifica di ID.
     @Query("SELECT DISTINCT p FROM Property p " +
            "LEFT JOIN FETCH p.address a " +
            "LEFT JOIN FETCH a.municipality m " +
@@ -69,13 +65,7 @@ public interface PropertyRepository extends JpaRepository<Property, Integer> {
            "WHERE p.idProperty IN :ids")
     List<Property> findFullPropertiesByIds(@Param("ids") List<Integer> ids);
 
-    /**
-     * Aggiorna lo stato di una singola proprietà in modo efficiente
-     * eseguendo una query UPDATE diretta.
-     * @param propertyId L'ID della proprietà da aggiornare.
-     * @param newStateId L'ID del nuovo stato da impostare.
-     */
-    @Modifying // Indica che questa query modifica i dati (non è una SELECT)
+    @Modifying
     @Query("UPDATE Property p SET p.propertyState.id = :newStateId WHERE p.id = :propertyId")
     void updatePropertyState(@Param("propertyId") int propertyId, @Param("newStateId") int newStateId);
     

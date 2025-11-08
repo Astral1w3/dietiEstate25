@@ -34,7 +34,7 @@ public class Region {
     
     @Override
     public String toString() {
-    return "Region{id=" + regionId + ", name='" + regionName + "'}"; // Exclude the province list
+    return "Region{id=" + regionId + ", name='" + regionName + "'}"; 
     }
 
 }

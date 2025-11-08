@@ -43,9 +43,6 @@ public class PropertyController {
 
     @GetMapping("/{propertyId}")
     public ResponseEntity<PropertyDTO> getPropertyById(@PathVariable int propertyId) {
-        // Rimosso try-catch. Se la proprietà non viene trovata,
-        // il service lancerà ResourceNotFoundException, che sarà
-        // gestita dal nostro GlobalExceptionHandler.
         PropertyDTO propertyDTO = propertyService.getPropertyById(propertyId);
         return ResponseEntity.ok(propertyDTO);
     }
@@ -55,28 +52,19 @@ public class PropertyController {
         @RequestPart("propertyData") String propertyDataJson, 
         @RequestPart("images") List<MultipartFile> images,
         Authentication authentication
-    ) throws JsonProcessingException { // L'eccezione viene ora propagata
+    ) throws JsonProcessingException {
         
-        // NOTA: Il controllo `if (authentication == null)` è stato rimosso.
-        // Se questo endpoint è protetto da Spring Security, un utente non
-        // autenticato non raggiungerà mai questo metodo. La sicurezza
-        // viene gestita a un livello superiore, mantenendo il controller pulito.
 
         PropertyDTO propertyDTO = objectMapper.readValue(propertyDataJson, PropertyDTO.class);
-        String userEmail = authentication.getName(); // Recupera l'email in modo sicuro
+        String userEmail = authentication.getName();
         
         PropertyDTO savedPropertyDTO = propertyService.addPropertyAndImages(propertyDTO, images, userEmail); 
         
-        // Risposta 201 CREATED, standard per la creazione di risorse.
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPropertyDTO);
     }
 
     @DeleteMapping("/{propertyId}")
     public ResponseEntity<ApiResponse> deleteProperty(@PathVariable int propertyId) {
-        // La logica è stata spostata nel service. Ora il service lancia
-        // un'eccezione se la risorsa non esiste.
-        // In caso di successo, non restituiamo più una stringa semplice ma la nostra
-        // ApiResponse standard per coerenza.
         propertyService.deleteProperty(propertyId);
         return ResponseEntity.ok(new ApiResponse(true, "Proprietà eliminata con successo."));
     }
@@ -84,8 +72,6 @@ public class PropertyController {
     @PostMapping("/{propertyId}/increment-view")
     public ResponseEntity<Void> incrementViewCount(@PathVariable Integer propertyId) {
         propertyService.incrementViewCount(propertyId);
-        // ResponseEntity.accepted() (202) è semanticamente più corretto per
-        // operazioni che non hanno un risultato immediato da restituire.
         return ResponseEntity.accepted().build();
     }
 
@@ -95,7 +81,7 @@ public class PropertyController {
         @Valid @RequestBody PropertyStateUpdateDTO stateUpdateDTO
     ) {
         propertyService.updatePropertyState(propertyId, stateUpdateDTO.getState());
-        return ResponseEntity.ok().build(); // Restituisce 200 OK senza corpo
+        return ResponseEntity.ok().build();
     }
 
 }

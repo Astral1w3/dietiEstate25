@@ -8,22 +8,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Implementazione personalizzata dell'interfaccia {@link UserDetails} di Spring Security.
+ * Questa classe agisce come un "adapter" (adattatore) tra il nostro modello di dominio {@link User}
+ * e l'oggetto che Spring Security utilizza internamente per gestire l'autenticazione e l'autorizzazione.
+ * Invece di lavorare direttamente con l'oggetto User, Spring Security lavora con questa rappresentazione.
+ */
 public class CustomUserDetails implements UserDetails {
 
-    private final User user; // Manteniamo l'oggetto utente originale per un facile accesso
+    /**
+     * L'entità User originale dal nostro database.
+     * Viene mantenuta per accedere facilmente a tutte le informazioni dell'utente,
+     * come password, email, ruolo e altri dettagli.
+     */
+    private final User user;
 
     public CustomUserDetails(User user) {
         this.user = user;
     }
 
+    /**
+     * Restituisce le autorità (ruoli/permessi) concesse all'utente.
+     * Spring Security utilizza questa collezione per le verifiche di autorizzazione (es. @PreAuthorize("hasRole('ADMIN')")).
+     *
+     * @return Una collezione contenente le autorità dell'utente.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (user == null || user.getRole() == null || user.getRole() == null) {
             return Collections.emptyList();
         }
 
-        // --- MODIFICA 1: Aggiungiamo il prefisso "ROLE_" come si aspetta Spring Security. ---
-        // Usiamo anche toUpperCase() per coerenza, dato che i ruoli sono spesso in maiuscolo.
         String roleName = "ROLE_" + user.getRole().toUpperCase();
         
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleName);
@@ -37,18 +52,14 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        // L'identificativo univoco per Spring è l'email
         return user.getEmail();
     }
 
-    // --- MODIFICA 2: Aggiungiamo un getter per l'oggetto User originale ---
-    // Questo ci servirà nel prossimo passo per accedere al nome del ruolo pulito.
     public User getUser() {
         return user;
     }
 
 
-    // I seguenti metodi rimangono invariati
     @Override 
     public boolean isAccountNonExpired() { return true; }
 

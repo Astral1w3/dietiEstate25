@@ -17,55 +17,52 @@ import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * Service class for handling file storage operations, such as storing and loading files.
- * This service ensures that files are stored securely in a configured directory.
- */
+
 @Service
 public class FileStorageService {
 
     private final Path fileStorageLocation;
 
     /**
-     * Constructs the FileStorageService and initializes the file storage directory.
-     * It creates the directory if it does not already exist.
+     * Costruttore del FileStorageService che inizializza la directory di archiviazione dei file.
+     * Se la directory specificata non esiste, viene creata automaticamente.
      *
-     * @param uploadDir The path to the upload directory, injected from application properties.
-     * @throws FileStorageException if the storage directory could not be created.
+     * @param uploadDir Il percorso della directory di upload, iniettato dalle proprietà dell'applicazione (es. application.properties).
+     * @throws FileStorageException se non è stato possibile creare la directory di archiviazione.
      */
     public FileStorageService(@Value("${spring.servlet.multipart.location}") String uploadDir) {
-        // Ensure the base directory path is absolute and normalized.
+        // Normalizza e rende assoluto il percorso della directory per garantirne la coerenza.
         this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
 
         try {
-            // Create the directory if it doesn't exist.
+            // Crea la directory (e le eventuali directory parent) se non esistono.
             Files.createDirectories(this.fileStorageLocation);
-        } catch (IOException ex) { // Be more specific with the exception
+        } catch (IOException ex) {
             throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
     
 
     /**
-     * Stores an uploaded file to the configured storage location.
-     * The method sanitizes the original filename, generates a unique filename using UUID
-     * to prevent naming conflicts and hide original file names, and then saves the file.
+     * Archivia un file caricato nella directory di destinazione.
+     * Il metodo esegue la pulizia (sanitizzazione) del nome del file originale, genera un nome univoco tramite UUID
+     * per prevenire conflitti e nascondere i nomi originali, e infine salva il file.
      *
-     * @param file The {@link MultipartFile} object representing the file to be stored.
-     * @return The unique, randomly generated filename under which the file has been saved.
-     * @throws FileStorageException if the filename is invalid or if an I/O error occurs during storage.
+     * @param file L'oggetto {@link MultipartFile} che rappresenta il file da archiviare.
+     * @return Il nome del file univoco e generato casualmente con cui il file è stato salvato.
+     * @throws FileStorageException se il nome del file non è valido o se si verifica un errore di I/O durante il salvataggio.
      */
     public String storeFile(MultipartFile file) {
-        // Get the original filename from the multipart request.
+        // Pulisce il nome del file da caratteri potenzialmente dannosi o sequenze di percorso (es. ../).
         String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
-        // Check for invalid characters or path sequences.
+        // Controlla che il nome del file non sia vuoto o contenga sequenze di percorso non valide.
         if (originalFileName.isEmpty() || originalFileName.contains("..")) {
             throw new FileStorageException("Sorry! Filename contains an invalid path sequence or is empty: " + originalFileName);
         }
 
         try {
-            // Securely generate a unique filename to prevent overwrites and hide internal naming.
+            // Genera un nome file univoco per evitare sovrascritture e problemi di sicurezza.
             String fileExtension = "";
             int dotIndex = originalFileName.lastIndexOf('.');
             if (dotIndex >= 0) {
@@ -73,10 +70,10 @@ public class FileStorageService {
             }
             String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
 
-            // Resolve the path against the base location. The filename is system-generated and safe.
+            // Risolve il percorso completo del file di destinazione.
             Path targetLocation = this.fileStorageLocation.resolve(uniqueFileName);
             
-            // Copy the file to the target location.
+            // Copia il contenuto del file caricato nella destinazione finale, sovrascrivendo se esiste.
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             return uniqueFileName;
@@ -86,24 +83,27 @@ public class FileStorageService {
     }
 
     /**
-     * Loads a file as a resource and performs security checks to prevent path traversal attacks.
-     * It verifies that the requested file path is within the designated storage directory before serving it.
+     * Carica un file come risorsa (`Resource`), eseguendo controlli di sicurezza per prevenire attacchi di tipo "path traversal".
+     * Il metodo verifica che il percorso del file richiesto sia confinato all'interno della directory di archiviazione
+     * prima di restituirlo.
      *
-     * @param fileName The name of the file to load.
-     * @return A {@link Resource} object for the requested file, which can be sent to the client.
-     * @throws ResourceNotFoundException if the file is not found, is not readable, or if the path is outside the storage directory.
+     * @param fileName Il nome del file da caricare.
+     * @return Un oggetto {@link Resource} che rappresenta il file richiesto, pronto per essere inviato al client.
+     * @throws ResourceNotFoundException se il file non viene trovato, non è leggibile, o se il percorso tenta
+     *                                   di accedere a una directory esterna a quella di archiviazione.
      */
     public Resource loadFileAsResource(String fileName) {
         try {
-            // Resolve the filename against the base storage directory.
+            // Risolve il percorso del file relativo alla directory di archiviazione.
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
 
-            // This is the critical security check to prevent path traversal.
-            // It verifies that the resolved path is still within the intended storage directory.
+            // Verifica che il percorso risolto si trovi ancora all'interno della directory di archiviazione.
+            // Questo impedisce di accedere a file in altre parti del sistema (es. /etc/passwd).
             if (!filePath.startsWith(this.fileStorageLocation)) {
                 throw new ResourceNotFoundException("Cannot access file outside of the designated storage directory: " + fileName);
             }
 
+            // Crea una risorsa a partire dall'URI del file
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() && resource.isReadable()) {

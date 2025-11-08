@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OfferStatusRepository extends JpaRepository<OfferState, Integer> {
-    // Potrebbe essere utile trovare uno stato per nome
-    // Optional<OfferState> findByState(String state);
 }

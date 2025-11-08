@@ -1,6 +1,5 @@
 package com.dietiestates2025.dieti.model;
 
-// Assicurati di avere questi import
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
@@ -15,7 +14,6 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "property_state")
-// SOSTITUISCI @Data CON QUESTO BLOCCO
 @Getter
 @Setter
 @NoArgsConstructor

@@ -17,21 +17,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OfferState {
 
-    /**
-     * Il nome dello stato (es. "IN ATTESA", "ACCETTATA").
-     * Funge da chiave primaria (PK) perché è univoco e descrittivo.
-     */
     @Id
     private Integer id;
     
     private String state;
 
-    /**
-     * Lista di tutte le offerte che si trovano in questo stato.
-     * Questa è la parte "inversa" della relazione e potrebbe non essere sempre necessaria,
-     * ma è una buona pratica definirla.
-     * Usiamo @JsonIgnore per evitare cicli infiniti durante la serializzazione JSON.
-     */
+
     @JsonIgnore
     @OneToMany(mappedBy = "offerState")
     private List<Offer> offers;

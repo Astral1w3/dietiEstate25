@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.dozer.DozerBeanMapper;
-import org.springframework.data.domain.Page;         // <-- IMPORT AGGIUNTO
-import org.springframework.data.domain.Pageable;       // <-- IMPORT AGGIUNTO
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -62,6 +62,15 @@ public class PropertyService {
         this.propertyStateRepository = propertyStateRepository;
     }
 
+    /**
+     * Crea una nuova proprietà e gestisce l'upload delle immagini associate in un'unica transazione.
+     * Se una qualsiasi operazione fallisce (es. salvataggio immagine), l'intera creazione viene annullata.
+     *
+     * @param propertyDTO DTO con i dati della nuova proprietà.
+     * @param imageFiles Lista di file immagine da associare.
+     * @param userEmail Email dell'utente proprietario, ottenuta dal contesto di sicurezza.
+     * @return Il {@link PropertyDTO} della proprietà appena creata, completo di URL delle immagini.
+     */
     @Transactional
     public PropertyDTO addPropertyAndImages(PropertyDTO propertyDTO, List<MultipartFile> imageFiles, String userEmail){ 
         User owner = userRepository.findById(userEmail)
@@ -99,7 +108,7 @@ public class PropertyService {
         
         Set<Dashboard> dashboards = new HashSet<>();
         dashboards.add(userDashboard);
-        property.setDashboards(dashboards); // Ora il tipo corrisponde
+        property.setDashboards(dashboards);
         
         Property savedProperty = repo.save(property);
 
@@ -115,28 +124,24 @@ public class PropertyService {
         return mapToDtoWithImageUrls(finalProperty);
     }
     
-   
-    /**
-     * Aggiorna lo stato di una proprietà in modo EFFICIENTE.
+   /**
+     * Aggiorna lo stato di una proprietà in modo efficiente, utilizzando una query di UPDATE diretta
+     * invece di caricare l'intera entità in memoria.
+     *
      * @param propertyId L'ID della proprietà da aggiornare.
-     * @param newStateName Il nome del nuovo stato.
+     * @param newStateName Il nome del nuovo stato (es. "Sold", "Unavailable").
      */
     @Transactional
     public void updatePropertyState(int propertyId, String newStateName) {
-        // 1. Trova solo l'ID del nuovo stato
         PropertyState newState = propertyStateRepository.findByStateIgnoreCase(newStateName)
             .orElseThrow(() -> new ResourceNotFoundException(
                 "Stato '" + newStateName + "' non valido o non trovato nel database."
             ));
 
-        // 2. Esegui la query UPDATE diretta
         repo.updatePropertyState(propertyId, newState.getId());
     }
 
-    /**
-     * Cancella una proprietà. Questa funzione era già presente e corretta.
-     * @param propertyId L'ID della proprietà da cancellare.
-     */
+    
     @Transactional
     public void deleteProperty(int propertyId) {
         if (!repo.existsById(propertyId)) {
@@ -157,7 +162,14 @@ public class PropertyService {
 
     private static final Integer AVAILABLE_STATE_ID = 1;
 
-
+    /**
+     * Metodo helper privato per mappare un'entità {@link Property} a un {@link PropertyDTO}.
+     * La sua responsabilità principale è quella di convertire la lista di entità Image
+     * in una lista di URL assoluti e accessibili dal frontend.
+     *
+     * @param property L'entità da mappare.
+     * @return Il DTO pronto per essere inviato come risposta JSON.
+     */
     private PropertyDTO mapToDtoWithImageUrls(Property property) {
         PropertyDTO dto = dozerBeanMapper.map(property, PropertyDTO.class);
         
@@ -181,6 +193,11 @@ public class PropertyService {
         return dto;
     }
     
+    /**
+     * Incrementa il contatore delle visualizzazioni per una data proprietà.
+     * Gestisce la creazione dell'entità PropertyStats se non esiste.
+     * @param propertyId L'ID della proprietà visualizzata.
+     */
     @Transactional
     public void incrementViewCount(Integer propertyId) {
         Property property = repo.findById(propertyId)
@@ -199,7 +216,15 @@ public class PropertyService {
         repo.save(property);
     }
 
-     public PagedResponseDTO<PropertyDTO> findPropertiesByLocationAvailable(String location, Pageable pageable) {
+    /**
+     * Esegue una ricerca paginata e ottimizzata per le proprietà disponibili in una data località.
+     * L'ottimizzazione consiste in due query separate: la prima per gli ID, la seconda per i dati completi.
+     *
+     * @param location La località in cui cercare (es. "Napoli").
+     * @param pageable Oggetto che contiene le informazioni di paginazione (numero pagina, dimensione).
+     * @return Un {@link PagedResponseDTO} contenente la lista di proprietà per la pagina corrente e i metadati di paginazione.
+     */
+    public PagedResponseDTO<PropertyDTO> findPropertiesByLocationAvailable(String location, Pageable pageable) {
         String lowerCaseLocation = location.toLowerCase();
     
         Page<Integer> idsPage = repo.findIdsByLocationAndState(lowerCaseLocation, AVAILABLE_STATE_ID, pageable);

@@ -25,7 +25,6 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
 
-    // Costante per evitare "magic strings"
     private static final String DEFAULT_USER_ROLE = "User";
 
     private final UserRepository userRepository;
@@ -43,7 +42,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = findUserByEmail(email);
-        return new CustomUserDetails(user); // Assumendo che CustomUserDetails esista
+        return new CustomUserDetails(user);
     }
 
     @Transactional
@@ -64,10 +63,9 @@ public class UserService implements UserDetailsService {
         newUser.setUsername(request.getUsername());
         newUser.setRole(userRole);
 
-        // Distingue tra registrazione social e standard
         if (request.getGoogleId() != null && !request.getGoogleId().isEmpty()) {
             newUser.setGoogleId(request.getGoogleId());
-            newUser.setUserPassword(null); // La password è null per gli utenti social
+            newUser.setUserPassword(null);
         } else {
             if (request.getPassword() == null || request.getPassword().isEmpty()) {
                 throw new IllegalArgumentException("La password è obbligatoria per la registrazione standard.");
@@ -88,23 +86,19 @@ public class UserService implements UserDetailsService {
     public void changeUserPassword(PasswordChangeRequestDTO request) {
         User user = findUserByEmail(request.getEmail());
 
-        // Verifica la password corrente, se l'utente ne ha già una
         validateCurrentPassword(request.getCurrentPassword(), user);
 
-        // Imposta la nuova password
         setNewPassword(user, request.getNewPassword());
 
         userRepository.save(user);
     }
 
     private void validateCurrentPassword(String currentPassword, User user) {
-        // Se l'utente ha già una password, quella fornita deve essere corretta.
         if (user.getUserPassword() != null && !user.getUserPassword().isEmpty()) {
             if (currentPassword == null || !passwordEncoder.matches(currentPassword, user.getUserPassword())) {
                 throw new BadCredentialsException("La password corrente non è corretta.");
             }
         }
-        // Se l'utente non ha una password (es. login social), si può procedere senza verifica.
     }
 
     private void setNewPassword(User user, String newPassword) {
@@ -120,13 +114,11 @@ public class UserService implements UserDetailsService {
         return password != null && !password.isBlank();
     }
 
-    // Metodo helper per trovare un utente o lanciare un'eccezione standard
     private User findUserByEmail(String email) {
         return userRepository.findById(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con email: " + email));
     }
 
-    // --- Logica di business spostata dall'entità User ---
 
     public List<BuyingAndSelling> getSellingsForUser(String email) {
         User user = findUserByEmail(email);
@@ -146,19 +138,10 @@ public class UserService implements UserDetailsService {
     }
 
 
-    /**
-     * Gestisce il login tramite Google.
-     * Cerca un utente tramite email. Se esiste, lo restituisce.
-     * Altrimenti, ne crea uno nuovo con i dati di Google e lo restituisce.
-     * @param googleLoginRequest DTO con i dati provenienti dal login di Google.
-     * @return UserDetails per l'utente trovato o appena creato.
-     */
     @Transactional
     public UserDetails processGoogleLogin(GoogleLoginRequest googleLoginRequest) {
-        // Cerca l'utente nel database. Optional<User> è più sicuro di exists + find.
         User user = userRepository.findById(googleLoginRequest.getEmail())
             .orElseGet(() -> {
-                // Se l'utente non esiste (.orElseGet), crea e registra un nuovo utente.
                 Role userRole = roleRepository.findByRoleName(DEFAULT_USER_ROLE)
                     .orElseThrow(() -> new RuntimeException("Ruolo di default '" + DEFAULT_USER_ROLE + "' non trovato nel database."));
                     
@@ -171,12 +154,11 @@ public class UserService implements UserDetailsService {
                 newUser.setUsername(googleLoginRequest.getName());
                 newUser.setGoogleId(googleLoginRequest.getGoogleId());
                 newUser.setRole(userRole);
-                newUser.setUserPassword(null); // Nessuna password locale per gli utenti Google
+                newUser.setUserPassword(null);
 
                 return userRepository.save(newUser);
             });
 
-        // Restituisce i dettagli dell'utente (trovato o nuovo) per la creazione del JWT.
-        return new CustomUserDetails(user); // Assumendo che CustomUserDetails esista
+        return new CustomUserDetails(user);
     }
 }

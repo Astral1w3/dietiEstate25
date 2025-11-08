@@ -33,7 +33,6 @@ public class OfferController {
             @Valid @RequestBody OfferRequestDTO offerRequest,
             Authentication authentication) {
         
-        // Ottieni l'email dell'utente autenticato dal contesto di sicurezza
         String userEmail = authentication.getName();
 
         OfferResponseDTO createdOffer = offerService.createOffer(offerRequest, userEmail);
@@ -41,7 +40,6 @@ public class OfferController {
         return new ResponseEntity<>(createdOffer, HttpStatus.CREATED);
     }
 
-     // --- INIZIO NUOVO ENDPOINT PER LA DASHBOARD ---
     @GetMapping("/agent-offers")
     public ResponseEntity<List<OfferDetailsDTO>> getAgentOffers(Authentication authentication) {
         String agentEmail = authentication.getName();
