@@ -1,7 +1,18 @@
+# Git
 .git
 .gitignore
-.idea
-.vscode
+
+# IDE e file di configurazione locali
+.idea/
+.vscode/
+*.iml
+
+# Cartella di output del build di Maven
 target/
-mvnw
-mvnw.cmd
+
+
+# File di log
+*.log
+
+# Altri file generati localmente
+.DS_Store
