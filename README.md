@@ -63,7 +63,7 @@ Prerequisite:
 
 1. Load Docker image
 
-Make sure you have `dieti-estates-1.0.tar` (available in `Docker/`), then run:
+Make sure you have `dieti-estates-1.0.tar` on your machine, then run:
 
 ```bash
 docker load -i dieti-estates-1.0.tar
@@ -87,6 +87,10 @@ For debugging:
 ```bash
 docker logs dieti-backend
 ```
+
+Note:
+
+- some properties may appear without images in the Docker environment because not all sample images are bundled into the Docker image
 
 ### Frontend
 
@@ -137,7 +141,6 @@ To use local backend, edit `dietiestates2025-front/src/services/api.js`:
 - `dietiestates2025-back`: Spring Boot backend
 - `dietiestates2025-front`: React frontend
 - `Database`: DB dump and notes
-- `Docker`: Docker assets and notes
 
 ## Deployment Workflows
 

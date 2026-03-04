@@ -23,6 +23,3 @@ dietiestates2025-back/src/main/java/com/dietiestates2025/dieti/uploads/
 .idea/
 *.iml
 .vscode/
-
-# Large local Docker artifacts (GitHub file size limit)
-Docker/*.tar
