@@ -1,4 +1,4 @@
-il database è implementato su POSTGRESQL per vedere il contenuto:
+The database is implemented on PostgreSQL. To view its content:
 
--aprire pgAdmin
--Fare il RESTORE del Database.bak 
+- Open pgAdmin
+- Restore `Database.bak`
