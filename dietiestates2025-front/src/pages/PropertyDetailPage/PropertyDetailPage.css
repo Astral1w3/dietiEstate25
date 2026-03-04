@@ -1,0 +1,119 @@
+/* src/pages/PropertyDetailPage/PropertyDetailPage.css */
+
+.property-detail-container {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    padding-top: 80px; 
+}
+
+.property-detail-main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-lg); 
+}
+
+.back-to-search-link {
+    display: inline-block;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-secondary);
+    font-weight: 700;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-lg);
+    align-items: start;
+}
+
+.info-primary h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: var(--spacing-sm);
+}
+
+.info-primary h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary, #e63946);
+    margin-bottom: var(--spacing-sm);
+}
+
+.info-primary p { margin: var(--spacing-xs) 0; color: #555; font-size: 1.1rem; }
+.info-primary .stats { display: flex; gap: var(--spacing-md); margin-top: var(--spacing-md); font-weight: 700; }
+.info-primary .stats span { padding-right: var(--spacing-md); border-right: 1px solid var(--color-border); }
+.info-primary .stats span:last-child { border-right: none; }
+.pet-policy { margin-top: var(--spacing-md) !important; }
+
+.contact-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* MODIFICA: Aggiunto 'gap' per spaziare i pulsanti */
+    gap: var(--spacing-md, 12px); 
+}
+
+.btn-contact {
+    width: 100%;
+    padding: var(--spacing-md);
+    font-size: 1.1rem;
+}
+
+.auth-message {
+    margin-top: var(--spacing-sm, 8px);
+    font-size: 0.9rem;
+    color: #757575;
+    text-align: center;
+}
+
+/* --- Stili per i pulsanti disabilitati --- */
+.btn-contact:disabled,
+.btn-contact:disabled:hover {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* --- Sezioni informative --- */
+.info-section { margin-top: var(--spacing-xxl); padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border); }
+.info-section h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: var(--spacing-md); }
+.info-section ul { list-style: disc; padding-left: 20px; }
+.cost-item { display: flex; justify-content: space-between; padding: var(--spacing-md) 0; border-bottom: 1px solid var(--color-surface); }
+.cost-item:last-child { border-bottom: none; }
+.map-wrapper { height: 400px; width: 100%; border-radius: var(--border-radius); overflow: hidden; margin-top: var(--spacing-md); }
+
+/* --- Stili per il Modale --- */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1001; display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 400px; }
+.modal-content h2 { margin-top: 0; }
+.modal-content p { color: #555; }
+.modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; width: 100%; gap: 10px; }
+
+.offer-input-group { display: flex; flex-direction: column; width: 100%; margin-top: 15px; }
+.offer-input-group label { margin-bottom: 5px; font-size: 0.9rem; color: #333; }
+.offer-input-group input { width: 100%; padding: 10px; border: 1px solid var(--color-border, #ccc); border-radius: var(--border-radius, 8px); font-size: 1rem; }
+.modal-error { color: #D32F2F; font-size: 0.9rem; margin-top: 10px; text-align: center; width: 100%; }
+
+/* --- Stili per React Datepicker --- */
+.modal-content .react-datepicker { font-family: inherit; border: 1px solid var(--color-border, #e0e0e0); border-radius: var(--border-radius, 8px); box-shadow: var(--box-shadow, 0 4px 12px rgba(0,0,0,0.1)); font-size: 1rem; }
+.modal-content .react-datepicker__month-container { width: 100%; }
+.modal-content .react-datepicker__header { background-color: var(--color-surface, #f8f9fa); border-bottom: 1px solid var(--color-border, #e0e0e0); border-top-left-radius: var(--border-radius, 8px); border-top-right-radius: var(--border-radius, 8px); padding: 20px; }
+.modal-content .react-datepicker__current-month { font-size: 1.25rem; font-weight: 700; color: var(--color-text, #333); padding-bottom: 15px; }
+.modal-content .react-datepicker__navigation { top: 18px; }
+.modal-content .react-datepicker__navigation-icon::before { border-color: var(--color-text, #333); border-width: 3px 3px 0 0; height: 10px; width: 10px; }
+.modal-content .react-datepicker__day-name, .modal-content .react-datepicker__day { width: 2.5rem; height: 2.5rem; line-height: 2.5rem; margin: 0.2rem; }
+.modal-content .react-datepicker__day-name { color: #888; font-weight: 700; }
+.modal-content .react-datepicker__day { color: var(--color-text, #333); transition: all 0.2s ease-in-out; }
+.modal-content .react-datepicker__day:hover { background-color: var(--color-surface, #f0f0f0); border-radius: 50%; }
+.modal-content .react-datepicker__day--selected, .modal-content .react-datepicker__day--keyboard-selected { background-color: #e63946; color: #fff; border-radius: 50%; }
+.modal-content .react-datepicker__day--selected:hover { background-color: #d62839; }
+.modal-content .react-datepicker__day--outside-month { color: #ccc; }
+
+/* --- Media Queries --- */
+@media (max-width: 768px) {
+    .detail-grid { grid-template-columns: 1fr; }
+    .info-primary h1 { font-size: 2rem; }
+    .info-primary h2 { font-size: 1.75rem; }
+}

@@ -1,0 +1,55 @@
+.page-search-form {
+    display: flex;
+    width: 100%;
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-xl);
+    background-color: var(--color-background);
+}
+
+.page-search-form input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    padding: 14px 18px;
+    font-size: 16px;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.page-search-form button {
+    background-color: var(--color-primary);
+    border: none;
+    color: var(--color-text-light);
+    padding: 0 var(--spacing-lg);
+    cursor: pointer;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    transition: background-color var(--transition-speed) ease;
+}
+
+.page-search-form button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.geopify-context{
+    background-color: black;
+}
+.geopify-geocoder-autocomplete{
+    background-color: black;
+}
+
+.page-search-form .geocoder-container{
+    width: 100%;
+}
+
+.page-search-form .geoapify-autocomplete-input {
+    width: 100%;
+    outline: none;
+    border: none; /* Rimuoviamo il bordo dall'input stesso, lo gestisce il contenitore */
+    padding: 12px 15px;
+    font-size: 16px;
+    color: #000000;
+    box-shadow: none; /* Rimuove eventuali ombre di default */
+}
+
+.geoapify-autocomplete-items div {
+    color: #252525;
+}

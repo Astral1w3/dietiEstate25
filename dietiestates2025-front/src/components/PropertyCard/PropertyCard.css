@@ -1,0 +1,125 @@
+.property-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background-color: var(--color-background);
+    transition: box-shadow var(--transition-speed) ease;
+}
+.property-card:hover {
+    box-shadow: var(--box-shadow);
+}
+
+.card-image-container {
+    position: relative;
+    height: 200px;
+}
+.card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-tag {
+    position: absolute;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--color-text-light);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.card-favorite-btn {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--color-text-light);
+    cursor: pointer;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.card-details {
+    padding: var(--spacing-md);
+}
+
+.card-price {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin: 0 0 var(--spacing-xs);
+}
+
+.card-specs, .card-address, .card-city {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0 0 var(--spacing-xs);
+}
+
+.card-cta-btn {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--color-secondary);
+    color: var(--color-secondary);
+    border-radius: var(--border-radius);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+.card-cta-btn:hover {
+    background: var(--color-secondary);
+    color: var(--color-text-light);
+}
+
+/* Aggiungi queste regole alla fine del tuo file PropertyCard.css */
+
+.property-card-link {
+    text-decoration: none; /* Rimuove la sottolineatura del link */
+    color: inherit;       /* Fa ereditare il colore del testo dal genitore, invece del blu di default dei link */
+    display: block;       /* Assicura che il link occupi tutto lo spazio come un blocco */
+}
+
+.property-card-link:hover {
+    text-decoration: none; /* Assicura che la sottolineatura non appaia nemmeno al hover */
+}
+
+
+/* Contenitore per i tag, con un po' di spazio sopra */
+.card-amenities {
+    margin-top: var(--spacing-md);
+    display: flex;
+    flex-wrap: wrap; /* Permette ai tag di andare a capo se non c'è spazio */
+    gap: var(--spacing-xs); /* Spazio tra i tag */
+}
+
+/* Stile del singolo tag */
+.amenity-tag {
+    background-color: #f0f4f7; /* Un colore di sfondo leggero */
+    color: #334e68; /* Colore del testo scuro ma non nero */
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px; /* Padding interno */
+    border-radius: 12px; /* Bordi arrotondati per un look "a pillola" */
+    display: inline-flex; /* Per allineare l'emoji e il testo */
+    align-items: center;
+}
+
+.card-specs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-views {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #555;
+    font-size: 0.85rem;
+    margin-left: auto; /* Spinge il contatore a destra */
+}

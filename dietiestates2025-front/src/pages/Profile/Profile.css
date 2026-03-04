@@ -1,0 +1,36 @@
+.profile-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 24px 24px 24px; /* Aggiunto padding-top per l'header principale del sito */
+}
+
+.profile-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.profile-header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.profile-header p {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin: 4px 0 0 0;
+}
+
+.profile-main-content {
+    display: flex;
+    gap: 32px;
+}
+
+.profile-menu-container {
+    flex: 0 0 250px; /* Non si espande, non si restringe, base di 250px */
+}
+
+.profile-view-container {
+    flex: 1 1 auto; /* Occupa lo spazio rimanente */
+}
+

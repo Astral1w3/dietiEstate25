@@ -1,0 +1,11 @@
+
+.personal-details-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+@media (max-width: 768px) {
+    .personal-details-form {
+        grid-template-columns: 1fr;
+    }
+}

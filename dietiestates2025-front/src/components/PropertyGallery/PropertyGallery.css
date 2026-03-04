@@ -1,0 +1,50 @@
+/* src/components/PropertyGallery/PropertyGallery.css */
+
+.gallery-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Layout 2/3 per l'immagine principale, 1/3 per le thumbnails */
+    gap: var(--spacing-sm); /* Usa la variabile di spaziatura */
+    height: 400px;
+    overflow: hidden;
+    border-radius: var(--border-radius); /* Usa il tuo border-radius */
+}
+
+.gallery-main-image {
+    grid-column: 1 / 2;
+    height: 100%;
+}
+
+.gallery-main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-thumbnails {
+    grid-column: 2 / 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Griglia 2x2 */
+    grid-template-rows: 1fr 1fr;
+    gap: var(--spacing-sm); /* Usa la variabile di spaziatura */
+    height: 100%;
+}
+
+.gallery-thumbnail {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.gallery-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-speed) ease;
+}
+
+.gallery-thumbnail:hover img {
+    transform: scale(1.05);
+}
+

@@ -1,0 +1,56 @@
+package com.dietiestates2025.dieti.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Entity(name = "usertable")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    private String email;
+    private String googleId;
+    private String username;
+    private String userPassword;
+
+    @ManyToOne
+    @JoinColumn(name = "id_agency", referencedColumnName = "idAgency")
+    private Agency agency;
+
+    @ManyToOne
+    @JoinColumn(name = "role_name")
+    private Role role;
+
+    @OneToMany(mappedBy = "agent")
+    private List<BuyingAndSelling> sellings;
+
+    @OneToMany(mappedBy = "buyer")
+    private List<BuyingAndSelling> buyings;
+
+    @OneToOne(mappedBy = "user")
+    private Dashboard dashboard;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookedVisit> bookedVisits;
+
+    public User(String email, String username, String userPassword, Agency agency, Role role) {
+        this.email = email;
+        this.username = username;
+        this.userPassword = userPassword;
+        this.agency = agency;
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role != null ? role.getRoleName() : null;
+    }
+    
+}

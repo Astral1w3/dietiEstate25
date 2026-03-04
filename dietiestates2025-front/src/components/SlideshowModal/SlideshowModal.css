@@ -1,0 +1,93 @@
+/* src/components/SlideshowModal/SlideshowModal.css */
+
+.slideshow-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Sfondo opaco */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Assicura che sia sopra tutto, anche l'header */
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slideshow-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slideshow-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Mostra l'intera immagine senza tagliarla */
+    border-radius: var(--border-radius);
+}
+
+.slideshow-close-btn {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.slideshow-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.3);
+    border: none;
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    padding: 10px;
+    line-height: 1;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-speed) ease;
+}
+.slideshow-nav-btn:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.slideshow-nav-btn.prev { left: -70px; }
+.slideshow-nav-btn.next { right: -70px; }
+
+.slideshow-counter {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 15px;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+/* Media query per schermi più piccoli */
+@media (max-width: 768px) {
+    .slideshow-nav-btn.prev { left: 5px; }
+    .slideshow-nav-btn.next { right: 5px; }
+    .slideshow-close-btn { top: 5px; right: 10px; color: white; text-shadow: 0 0 5px black; }
+}

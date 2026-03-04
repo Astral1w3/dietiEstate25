@@ -1,0 +1,108 @@
+/* --- Import del Font e Stili di Base --- */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', sans-serif;
+}
+
+
+
+/* --- Contenitore Principale (Hero Section) --- */
+
+
+.hero-container {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    
+    /* 2. Il flexbox ora serve solo a centrare il contenuto interno */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* Stili dello sfondo */
+    background-color: #ffffff; 
+    background-image: url('../../../public/bgHome.jpeg');
+    background-size: cover;
+    background-position: center;
+    
+    /* 3. Il padding è stato spostato sull'header, quindi lo rimuoviamo da qui */
+    box-sizing: border-box; 
+
+
+    /*Cose nuove*/
+    flex-direction: column;
+    padding: var(--spacing-lg) var(--spacing-xxl);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.2));
+    z-index: 1; /* Sta sotto l'header (z-index: 1000) ma sopra l'immagine */
+}
+
+/* --- Contenuto Principale (Titolo e Ricerca) --- */
+.hero-content {
+      flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  color: var(--color-text-light);
+}
+
+.hero-content h1 {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-xl);
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+}
+
+.hamburger-menu { display: none; } /* Gestito in media query */
+
+.search-container{
+    width: 80%;
+}
+
+/* --- Media Queries per la Reattività (invariate) --- */
+/* ... le tue media queries rimangono le stesse ... */
+@media (max-width: 1024px) {
+    .secondary-nav {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    
+
+    .main-nav {
+        display: none;
+    }
+
+    .btn-login {
+        display: none;
+    }
+
+    .hamburger-menu {
+        display: block;
+    }
+
+    .hero-content h1 {
+        font-size: 40px;
+    }
+
+    .search-form input {
+        font-size: 16px;
+        padding: 16px;
+    }
+}

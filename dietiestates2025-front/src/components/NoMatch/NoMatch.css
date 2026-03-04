@@ -1,0 +1,60 @@
+/* ==========================================================================
+   STYLES FOR THE 404 (NoMatch) PAGE
+   ========================================================================== */
+
+.nomatch-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh; /* Ensures it always takes up the full screen height */
+    background-color: var(--color-surface); /* Light gray background from your design system */
+    padding: var(--spacing-lg);
+    box-sizing: border-box;
+    font-family: var(--font-primary);
+}
+
+.nomatch-content {
+    max-width: 550px;
+}
+
+.error-code {
+    font-size: 8rem; /* Large and impactful "404" */
+    font-weight: 900;
+    color: var(--color-primary); /* Primary red color */
+    opacity: 0.15; /* But with opacity so it's not overwhelming */
+    line-height: 1;
+    display: block;
+}
+
+.nomatch-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 0; /* Removes the space above the h1 */
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+}
+
+.nomatch-content p {
+    font-size: 1.1rem;
+    color: #6c757d; /* Gray for the descriptive text */
+    line-height: 1.7;
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Add some top margin to the button */
+.nomatch-content .btn {
+    margin-top: var(--spacing-lg);
+}
+
+
+/* --- Media Query for smaller screens --- */
+@media (max-width: 768px) {
+    .error-code {
+        font-size: 6rem; /* Reduce the "404" font size on mobile */
+    }
+
+    .nomatch-content h1 {
+        font-size: 2rem;
+    }
+}

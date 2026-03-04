@@ -1,0 +1,407 @@
+/* ==========================================================================
+   Design System & Variabili Globali
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
+
+:root {
+  /* Palette Colori */
+  --color-primary: #e24747; /* Rosso vibrante per azioni e accenti */
+  --color-primary-dark: #c93e3e; /* Rosso per hover */
+  --color-secondary: #007882; /* Teal per link e accenti secondari */
+  --color-text: #333333; /* Grigio scuro per testo su sfondi chiari */
+  --color-text-light: #ffffff;
+  --color-background: #ffffff;
+  --color-surface: #f4f4f4; /* Grigio chiaro per sfondi di input o sezioni */
+  --color-border: #dddddd;
+
+  /* Tipografia */
+  --font-primary: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Spaziatura */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+
+  /* Altro */
+  --border-radius: 8px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --transition-speed: 0.3s;
+}
+
+/* ==========================================================================
+   Reset e Stili di Base
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-primary);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+}
+
+h1 { font-size: 2.5rem; font-weight: 900; }
+h2 { font-size: 1.75rem; font-weight: 700; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+
+a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  transition: opacity var(--transition-speed) ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--spacing-lg) 0;
+}
+
+/* ==========================================================================
+   Classi di Componenti Riutilizzabili
+   ========================================================================== */
+
+/* --- Pulsanti --- */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: var(--border-radius);
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: all var(--transition-speed) ease;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+}
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  color: var(--color-text-light);
+  text-decoration: none;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-text-light);
+  border-color: var(--color-text-light);
+}
+.btn-outline:hover {
+  background-color: var(--color-text-light);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+/* Stile base per tutti i pulsanti di azione nella tabella */
+.btn-action {
+    display: inline-flex; /* Per allineare icona e testo se li aggiungerai */
+    align-items: center;
+    gap: var(--spacing-sm); /* Spazio tra icona e testo */
+    padding: 8px 16px; /* Aumentiamo un po' il padding */
+    margin: 3px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    border: none;
+    color: var(--color-text-light); /* Testo bianco */
+    cursor: pointer;
+    text-decoration: none; /* Rimuove la sottolineatura se usato come link */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Effetto al passaggio del mouse: leggera scuritura e sollevamento */
+.btn-action:hover {
+    transform: translateY(-2px); /* Effetto "sollevamento" */
+    filter: brightness(1.1); /* Rende il colore più brillante */
+}
+
+/* Stile per il pulsante ACCETTA */
+.btn-action.confirm {
+    background-color: #28a745; /* Verde successo */
+}
+
+/* Stile per il pulsante RIFIUTA */
+.btn-action.reject {
+    background-color: #dc3545; /* Rosso pericolo */
+}
+
+/* --- Elementi dei Form --- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+}
+
+/* Stile unificato per tutti gli input di un form */
+.form-input,
+input[type="text"], 
+input[type="email"], 
+input[type="password"],
+input[type="number"],
+textarea, 
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: var(--font-primary);
+    background-color: #f8f9fa;
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.form-input:focus,
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus, 
+select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(226, 71, 71, 0.2);
+}
+
+/* --- Messaggi di Feedback --- */
+.form-message {
+    text-align: center;
+    padding: 12px;
+    border-radius: 6px;
+    margin: var(--spacing-lg) 0;
+    font-weight: 500;
+    border: 1px solid transparent;
+}
+
+.form-message.success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border-color: #badbcc;
+}
+
+.form-message.error {
+    background-color: #f8d7da;
+    color: #842029;
+    border-color: #f5c2c7;
+}
+
+/* --- Reset Globale per Input Numerici --- */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* ==========================================================================
+   Media Queries per la Reattività
+   ========================================================================== */
+@media (max-width: 768px) {
+  .hero-container { padding: var(--spacing-md) var(--spacing-lg); }
+
+  .main-nav, .nav-right .btn {
+    display: none;
+  }
+  
+  .hamburger-menu {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--color-text-light);
+    cursor: pointer;
+  }
+
+  .hero-content h1 { font-size: 40px; }
+  .search-form input { font-size: 16px; padding: 16px; }
+}
+
+/*
+==========================================================================
+   Reset Globale per gli Input Numerici
+   - Nasconde le freccette (spinners) in tutti i browser.
+==========================================================================
+*/
+
+/* Per browser basati su WebKit (Chrome, Safari, Edge, Opera) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Rimuove lo stile nativo */
+    margin: 0; /* Rimuove ogni possibile margine residuo */
+}
+
+/* Per Firefox */
+input[type="number"] {
+    -moz-appearance: textfield; /* Dice a Firefox di trattarlo come un campo di testo */
+}
+
+
+
+/* ==========================================================================
+   Layout Dashboard & Componenti Comuni
+   ========================================================================== */
+
+/* --- Layout generico della pagina del dashboard --- */
+.dashboard-view {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background-color: #ffffff;
+    min-height: 100vh;
+}
+
+.dashboard-view h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
+}
+
+.dashboard-view hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* --- Griglia per le statistiche --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xxl);
+}
+
+/* --- Sezione contenitore (es. per la tabella) --- */
+.dashboard-section {
+    background-color: var(--color-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: var(--spacing-lg);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; 
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+/* --- Tabella Dati Generica --- */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead th {
+    padding: var(--spacing-md) var(--spacing-lg);
+    text-align: left;
+    background-color: #f8f9fa;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.data-table tbody td {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+/* ==========================================================
+   STILE PER I FILTRI - Coerente con la Palette Primaria
+   ========================================================== */
+
+/* --- Contenitore dei filtri --- */
+.filter-buttons {
+    display: inline-flex;
+    padding: var(--spacing-xs);
+    background-color: var(--color-surface); /* Grigio chiaro di base, coerente con i form */
+    border-radius: var(--border-radius);
+}
+
+/* --- Stile base per i singoli pulsanti --- */
+.filter-buttons button {
+    background: transparent;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 6px; /* Leggermente più piccolo del contenitore per un effetto "inset" */
+    
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6c757d; /* Grigio per lo stato inattivo, lo stesso dell'header della tabella */
+    
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+}
+
+/* --- Pulsante ATTIVO --- */
+/* Usa il colore primario per evidenziare lo stato attivo, come per i pulsanti principali */
+.filter-buttons button.active {
+    background-color: var(--color-primary);
+    color: var(--color-text-light); /* Testo bianco, come su .btn-primary */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Hover su pulsanti NON attivi --- */
+/* Al passaggio del mouse, il testo diventa più scuro per indicare interattività */
+.filter-buttons button:not(.active):hover {
+    color: var(--color-text);
+}
+
+/* --- Hover su pulsante ATTIVO --- */
+/* Utilizza la variabile --color-primary-dark per coerenza con .btn-primary:hover */
+.filter-buttons button.active:hover {
+    background-color: var(--color-primary-dark);
+}

@@ -1,0 +1,17 @@
+# Git
+.git
+.gitignore
+
+# IDE e file di configurazione locali
+.idea/
+*.iml
+
+# Cartella di output del build di Maven
+target/
+
+
+# File di log
+*.log
+
+# Altri file generati localmente
+.DS_Store

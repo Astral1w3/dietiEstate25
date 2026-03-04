@@ -1,0 +1,245 @@
+/* AgentDashboard.css - Ora contiene solo stili specifici! */
+
+.chart-container {
+    padding: 32px;
+}
+
+.export-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-export {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+    color: #333;
+}
+
+.btn-export:hover {
+    background-color: #e9ecef;
+}/* --- NUOVI STILI PER LA GRIGLIA DI CARD --- */
+
+.property-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.property-overview-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.property-overview-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.property-overview-card .card-image-container {
+    position: relative;
+    width: 100%;
+    height: 180px;
+}
+
+.property-overview-card .card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.property-overview-card .card-badges {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+/* Assicurati di avere stili per status-badge, altrimenti aggiungili */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: capitalize;
+}
+.status-badge.status-available, .status-badge.status-sale { background-color: #28a745; }
+.status-badge.status-occupied, .status-badge.status-rent { background-color: #007bff; }
+.status-badge.status-pending { background-color: #ffc107; color: #333; }
+.status-badge.status-accepted { background-color: #17a2b8; }
+.status-badge.status-declined, .status-badge.status-rejected { background-color: #dc3545; }
+
+
+.property-overview-card .card-content {
+    padding: 16px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.property-overview-card .card-content h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.property-overview-card .card-content .price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-primary, #e24747);
+    margin: 0 0 16px 0;
+}
+
+.property-overview-card .card-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.property-overview-card .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.property-overview-card .stat-item svg {
+    color: #888;
+}
+
+/* Stile per il contenitore dei pulsanti di azione */
+.property-overview-card .card-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #eee;
+}
+
+/* Stile base per i pulsanti di azione */
+.card-actions .btn-action {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Spazio tra icona e testo */
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Stile per il pulsante "Set as Sold" */
+.card-actions .btn-sold {
+    background-color: #1e5200; /* Verde successo */
+    color: white;
+}
+
+.card-actions .btn-sold:hover {
+    background-color: #1e5200; /* Verde più scuro */
+}
+
+/* Stile per il pulsante "Delete" */
+.card-actions .btn-delete {
+    background-color: #dc3545; /* Rosso pericolo */
+    color: white;
+}
+
+.card-actions .btn-delete:hover {
+    background-color: #c82333; /* Rosso più scuro */
+}
+
+/* Stile per il testo "Sold" quando la proprietà è venduta */
+.card-actions .sold-status-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #28a745; /* Stesso verde del pulsante "success" */
+    font-size: 0.9em;
+    padding: 8px 12px;
+}
+
+/* Assicura che la card sia un contenitore flessibile per posizionare le azioni in basso */
+.property-overview-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none; /* Rimuove la sottolineatura dal contenitore se era un Link */
+    color: inherit;
+}
+
+/* Contenitore per il link principale, per separarlo dalle azioni */
+.property-overview-card .card-main-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Fa in modo che il link occupi tutto lo spazio disponibile */
+}
+
+/* Stile per il contenitore dei pulsanti di azione (invariato ma importante) */
+.property-overview-card .card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Allinea verticalmente gli elementi */
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #eee;
+    margin-top: auto; /* Spinge la barra delle azioni in fondo alla card */
+}
+
+/* =============================================== */
+/* --- Stili per le Azioni sulla Property Card --- */
+/* =============================================== */
+
+
+
+
+/* --- Stile specifico per il pulsante "Set as Sold" --- */
+.card-actions .btn-sold {
+    background-color: #007bff; /* Verde (Successo) */
+    color: white;
+}
+
+.card-actions .btn-sold:hover {
+    background-color: #0056b3; /* Verde più scuro */
+}
+
+/* --- NUOVO STILE per il pulsante "Set as Available" --- */
+.card-actions .btn-available {
+    background-color: #28a745; /* Blu (Azione Primaria) */
+    color: white;
+}
+
+.card-actions .btn-available:hover {
+    background-color: #218838; /* Blu più scuro */
+}
+
+/* --- Stile specifico per il pulsante "Delete" --- */
+.card-actions .btn-delete {
+    background-color: #dc3545; /* Rosso (Pericolo) */
+    color: white;
+}
+
+.card-actions .btn-delete:hover {
+    background-color: #c82333; /* Rosso più scuro */
+}

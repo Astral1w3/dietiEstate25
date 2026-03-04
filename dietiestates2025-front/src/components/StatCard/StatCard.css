@@ -1,0 +1,43 @@
+.stat-card {
+    background-color: #ffffff;
+    border-radius: var(--border-radius, 8px);
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.stat-card-icon {
+    font-size: 2.5rem;
+    color: var(--color-primary, #e24747);
+    background-color: #fceeee;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-card-info {
+    line-height: 1.2;
+}
+
+.stat-card-title {
+    margin: 0;
+    color: #6c757d;
+    font-size: 16px;
+}
+
+.stat-card-value {
+    margin: 4px 0;
+    font-size: 2rem;
+    color: #333;
+}
+
+.stat-card-change {
+    margin: 0;
+    font-size: 14px;
+    color: #198754; /* Verde per indicare un aumento */
+}

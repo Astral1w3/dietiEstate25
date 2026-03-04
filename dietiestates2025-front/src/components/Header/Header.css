@@ -1,0 +1,151 @@
+/* ==========================================================================
+   HEADER: LAYOUT DI BASE
+   Questi stili si applicano sempre, indipendentemente dal tema.
+   ========================================================================== */
+
+/* ==========================================================================
+   HEADER: LAYOUT DI BASE
+   ========================================================================== */
+
+
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    padding: 15px 5%;
+    box-sizing: border-box;
+
+
+    transition: background-color 0.3s ease, border-bottom 0.3s ease;
+}
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 32px; /* Spazio tra gli elementi di navigazione */
+}
+
+
+/* Stili comuni per logo, link e pulsanti (indipendenti dal colore) */
+.logo {
+    font-size: 28px;
+    font-weight: 900;
+    transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+.main-nav a {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 8px 0;
+    padding-right: 20px;
+    transition: opacity 0.3s ease;
+}
+
+.main-nav a:hover {
+    opacity: 0.8;
+    text-decoration: none;
+}
+
+.btn-login {
+    font-weight: 700;
+    padding: 10px 20px;
+    border: 2px solid; /* Il colore del bordo verrÃ  definito dal tema */
+    border-radius: 8px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.welcome-message {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 0; 
+}
+
+.hamburger-menu {
+    display: none; /* Nascosto su desktop */    
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+
+/* ==========================================================================
+   TEMA 1: TRASPARENTE (per la Homepage)
+   ========================================================================== */
+
+.main-header.theme-transparent {
+    background-color: transparent;
+    border-bottom: 1px solid transparent; /* Per evitare salti durante la transizione */
+}
+
+/* Colori chiari per testo e icone */
+.main-header.theme-transparent .logo,
+.main-header.theme-transparent .main-nav a,
+.main-header.theme-transparent .welcome-message,
+.main-header.theme-transparent .profile-icon,
+.main-header.theme-transparent .hamburger-menu {
+    color: #fff;
+}
+
+/* Stile del pulsante Login */
+.main-header.theme-transparent .btn-login {
+    border-style: hidden;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ffffff;
+    border-color: #e24747;
+    background-color: #e24747;
+}
+
+.main-header.theme-transparent .btn-login:hover {
+    box-shadow: 0px 0px 15px 0px #e24747;
+    border-color: #e24747;
+    background-color: #e24747;
+    color: #ffff; /* Testo scuro su sfondo bianco */
+}
+
+
+/* ==========================================================================
+   TEMA 2: SOLIDO (per PropertiesPage e altre pagine)
+   ========================================================================== */
+
+.main-header.theme-solid {
+    background-color: var(--color-background); /* Sfondo bianco dalle variabili globali */
+    border-bottom: 1px solid var(--color-border); /* Linea di separazione */
+}
+
+/* Colori scuri per testo e icone */
+.main-header.theme-solid .logo {
+    color: #202020;
+}
+
+.main-header.theme-solid .main-nav a,
+.main-header.theme-solid .welcome-message,
+.main-header.theme-solid .profile-icon,
+.main-header.theme-solid .hamburger-menu {
+    color: #292929;
+}
+
+/* Stile del pulsante Login */
+.main-header.theme-solid .btn-login {
+    color: #292929;
+    border-color: #ccc; /* Un grigio neutro per il bordo */
+}
+
+.main-header.theme-solid .btn-login:hover {
+    background-color: var(--color-primary); /* Rosso dall'hover originale */
+    border-color: var(--color-primary);
+    color: #ffffff; /* Testo bianco */
+}

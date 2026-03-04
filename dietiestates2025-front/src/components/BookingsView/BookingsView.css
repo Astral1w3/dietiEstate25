@@ -1,0 +1,15 @@
+/* Stili specifici per BookingsView */
+
+.property-link {
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+}
+.property-link:hover {
+    color: var(--color-primary);
+}
+
+.client-info small {
+    color: #6c757d;
+    font-size: 0.85rem;
+}

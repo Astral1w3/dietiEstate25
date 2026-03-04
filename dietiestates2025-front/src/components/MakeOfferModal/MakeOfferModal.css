@@ -1,0 +1,82 @@
+/* Stili generali per il modale (potrebbero essere condivisi in un file CSS globale per modali) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--color-background, #fff);
+    padding: var(--spacing-lg, 24px);
+    border-radius: var(--border-radius, 8px);
+    box-shadow: var(--box-shadow, 0 4px 12px rgba(0,0,0,0.15));
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
+}
+
+.modal-content p {
+    color: #555;
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+}
+
+.modal-actions {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-border);
+}
+
+.modal-error {
+    color: var(--color-primary, #D32F2F);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: var(--spacing-md);
+    min-height: 20px; /* Evita che il layout "salti" quando compare l'errore */
+    text-align: center;
+    width: 100%;
+}
+
+/* Stili specifici per il form dell'offerta */
+.offer-input-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: var(--spacing-sm);
+}
+
+.offer-input-group label {
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.offer-input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-border, #ccc);
+    border-radius: var(--border-radius, 8px);
+    font-size: 1rem;
+    box-sizing: border-box; /* Assicura che padding e border non aumentino la larghezza */
+}

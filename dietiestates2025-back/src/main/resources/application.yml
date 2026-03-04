@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    # Questi valori verranno presi dalle variabili d'ambiente
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa: 
+    hibernate:
+      ddl-auto: update # Puoi lasciare 'update' per ora, ma in produzione si usa spesso 'validate' o 'none'
+    show-sql: true
+
+  servlet:
+    multipart:
+      enabled: true
+      location: ${SPRING_SERVLET_MULTIPART_LOCATION:./uploads}
+      max-file-size: 8MB
+      max-request-size: 8MB

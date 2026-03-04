@@ -1,0 +1,152 @@
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+}
+
+.type-selector {
+    display: flex; border: 1px solid #ced4da; border-radius: 6px; overflow: hidden;
+}
+.type-selector input[type="radio"] { display: none; }
+.type-selector label {
+    flex: 1; text-align: center; padding: 12px; margin: 0; cursor: pointer;
+    background-color: #f8f9fa; transition: background-color 0.2s ease;
+}
+.type-selector input[type="radio"]:checked + label {
+    background-color: var(--color-primary, #e24747); color: white; font-weight: bold;
+}
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 16px 24px; 
+}
+
+.service-checkbox { display: flex; align-items: center; }
+.service-checkbox input { width: auto; margin-right: 10px; }
+.service-checkbox label { margin-bottom: 0; }
+.upload-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 12px; background-color: #f8f9fa; border: 2px dashed #ced4da;
+    border-radius: 6px; cursor: pointer; font-size: 16px; color: #6c757d;
+}
+.image-preview-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 16px; margin-top: 16px;
+}
+.image-preview-item {
+    position: relative; border-radius: 6px; overflow: hidden;
+}
+.image-preview-item img {
+    width: 100%; height: 100px; object-fit: cover;
+}
+.remove-image-btn {
+    position: absolute; top: 5px; right: 5px; background-color: rgba(0,0,0,0.6);
+    color: white; border: none; border-radius: 50%; width: 24px; height: 24px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+/* --- NUOVO STILE PER I CHECKBOX A MATTONELLA --- */
+
+.group-legend {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+
+/* Nasconde il checkbox di default in modo accessibile */
+.checkbox-input {
+    clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+/* --- STILE PER I CHECKBOX A MATTONELLA (CON EMOJI) --- */
+
+.group-legend {
+    font-size: 16px; font-weight: 600; color: #333; margin-bottom: 16px;
+}
+.checkbox-group {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;
+}
+
+/* Nasconde il checkbox di default */
+.checkbox-input {
+    clip: rect(0 0 0 0); clip-path: inset(100%); height: 1px;
+    overflow: hidden; position: absolute; white-space: nowrap; width: 1px;
+}
+
+/* Stile della mattonella cliccabile */
+.checkbox-tile {
+    display: flex;
+    flex-direction: column; /* 1. Allinea emoji e testo in verticale */
+    align-items: center;
+    justify-content: center;
+    min-height: 90px; /* Aumentiamo leggermente l'altezza */
+    border-radius: var(--border-radius, 8px);
+    border: 2px solid #ced4da;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 12px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+    gap: 8px; /* 2. Aggiunge spazio tra emoji e testo */
+}
+
+/* 3. Aggiungiamo la classe per lo stile dell'emoji */
+.checkbox-icon {
+    font-size: 2rem; /* Rende l'emoji più grande */
+    line-height: 1; /* Previene altezze di riga strane */
+}
+
+.checkbox-label {
+    color: #6c757d;
+    font-weight: 500;
+    font-size: 14px; /* Leggermente più piccolo per dare spazio */
+    transition: color 0.2s ease-in-out;
+}
+
+/* --- Stili per lo stato SELEZIONATO (rimangono uguali) --- */
+.checkbox-input:checked + .checkbox-tile {
+    border-color: var(--color-primary, #e24747);
+    background-color: #fef4f4;
+}
+.checkbox-input:checked + .checkbox-tile .checkbox-label {
+    color: var(--color-primary, #e24747);
+    font-weight: 600;
+}
+.checkbox-input:checked + .checkbox-tile::before {
+    content: "✓"; position: absolute; top: 6px; right: 6px;
+    display: flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background-color: var(--color-primary, #e24747);
+    color: white; font-size: 12px; font-weight: bold;
+}
+
+/* --- Stili per l'interazione HOVER (rimangono uguali) --- */
+.checkbox-input:not(:checked) + .checkbox-tile:hover {
+    border-color: var(--color-primary-dark, #c93e3e);
+}
+
+
+
+
+
+
+/* --- Stili per la responrefasività (rimangono uguali) --- */
+@media (max-width: 768px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .services-grid { grid-template-columns: 1fr; } }

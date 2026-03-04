@@ -1,0 +1,30 @@
+/* Stili specifici per OffersView */
+
+.price-comparison {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.listing-price {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-decoration: line-through;
+}
+.offer-price {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.property-link {
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+}
+.property-link:hover {
+    color: var(--color-primary);
+}
+
+.client-info small {
+    color: #6c757d;
+    font-size: 0.85rem;
+}

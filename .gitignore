@@ -1,33 +1,28 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Monorepo build outputs and dependencies
+dietiestates2025-front/node_modules/
+dietiestates2025-front/build/
+dietiestates2025-back/target/
+dietiestates2025-back/.m2/
+dietiestates2025-back/.m2repo/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Local env files
+dietiestates2025-front/.env
+dietiestates2025-front/.env.local
+dietiestates2025-front/.env.development.local
+dietiestates2025-front/.env.test.local
+dietiestates2025-front/.env.production.local
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# Runtime upload folders and generated media
+uploads/
+dietiestates2025-back/uploads/
+dietiestates2025-back/src/uploads/
+dietiestates2025-back/src/main/java/com/dietiestates2025/dieti/uploads/
+
+# IDE/system
+.DS_Store
+.idea/
 *.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
 .vscode/
+
+# Large local Docker artifacts (GitHub file size limit)
+Docker/*.tar

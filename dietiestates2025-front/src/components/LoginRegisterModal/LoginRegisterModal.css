@@ -1,0 +1,137 @@
+/* src/components/LoginModal.css */
+.modal-overlay {
+  position: fixed; /* Copre l'intera finestra */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); /* Overlay nero semi-trasparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Assicura che sia sopra tutto il resto */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 32px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px; /* Larghezza massima del modal */
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  text-align: center;
+  color: #333;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #888;
+}
+
+/* ... Aggiungi qui gli stili per i form, i pulsanti, etc., per replicare l'immagine ... */
+
+
+/* ==========================================================================
+   Stili del Modal di Login
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--color-background);
+  padding: var(--spacing-xl);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: var(--box-shadow);
+  text-align: center;
+}
+
+.close-button {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-md);
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #888;
+}
+
+.modal-content h2 {
+  margin-bottom: var(--spacing-lg);
+}
+
+.modal-content .submit-button {
+  width: 100%;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #aaa;
+  margin: var(--spacing-lg) 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--color-border);
+}
+.divider:not(:empty)::before { margin-right: .5em; }
+.divider:not(:empty)::after { margin-left: .5em; }
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.social-btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease;
+}
+.social-btn:hover { background-color: var(--color-surface); }
+
+.terms {
+  font-size: 12px;
+  color: #888;
+  margin-top: var(--spacing-lg);
+}
+
+.btn-login{
+  width: 100%;
+  margin-top: 20px;
+}
+
+.input-generic{
+  margin-top: 3px;
+  margin-bottom: 10px;
+}
