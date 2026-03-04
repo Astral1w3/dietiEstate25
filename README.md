@@ -1,6 +1,6 @@
 # Dieti Estates 2025
 
-This README is the English translation of `README_IMPORTANTISSIMO.pdf`.
+Before starting, please open and read `technicalDocumentation.pdf`.
 
 To run the application you have 2 options:
 
